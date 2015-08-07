@@ -13,7 +13,7 @@ import ranges.CharSearcher;
 import streamUtils.EnhancedIterator;
 import streamUtils.PeekableIterator;
 import streamUtils.StringLineSupplier;
-import arrayUtils.ArrayUtil;
+import twg2.collections.util.arrayUtils.ArrayUtil;
 import dataType.CharCategory;
 import functionUtils.CharPredicate;
 

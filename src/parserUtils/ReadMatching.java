@@ -7,7 +7,7 @@ import java.util.List;
 import stringUtils.StringCompare;
 import stringUtils.StringIndex;
 import textParser.TextParser;
-import arrayUtils.ArrayUtil;
+import twg2.collections.util.arrayUtils.ArrayUtil;
 import functionUtils.CharPredicate;
 
 /**

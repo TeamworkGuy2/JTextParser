@@ -1,6 +1,6 @@
 package parserUtils;
 
-import arrayUtils.ArrayUtil;
+import twg2.collections.util.arrayUtils.ArrayUtil;
 
 /**
  * @author TeamworkGuy2
