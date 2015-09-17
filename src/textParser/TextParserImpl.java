@@ -9,12 +9,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import parserUtils.SlidingStringView;
-import ranges.CharSearcher;
 import streamUtils.EnhancedIterator;
 import streamUtils.PeekableIterator;
 import streamUtils.StringLineSupplier;
 import twg2.collections.util.arrayUtils.ArrayUtil;
-import dataType.CharCategory;
+import twg2.ranges.CharSearcher;
+import twg2.ranges.helpers.CharCategory;
 import functionUtils.CharPredicate;
 
 /** A buffered reader like class that reads lines and also allows the last line
@@ -615,7 +615,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 	@Override
 	public int nextIf(CharCategory type, int count, Appendable dst) {
 		CharSearcher charSearchers = type.getCharCondition();
-		return nextIf(charSearchers::isMatch, count, dst);
+		return nextIf(charSearchers::contains, count, dst);
 	}
 
 

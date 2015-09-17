@@ -180,7 +180,6 @@ public class TextParserTest {
 				"3"
 		};
 
-		StringBuilder strB = new StringBuilder();
 		int i = 0;
 		while(buf.hasNext()) {
 			int charI = 0;

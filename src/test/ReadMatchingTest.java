@@ -7,12 +7,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import checks.CheckTask;
 import parserUtils.ReadMatching;
 import parserUtils.ReadUnescape;
-import stringUtils.StringConvert;
-import test.StringConvertTest;
 import textParser.TextParserImpl;
+import checks.CheckTask;
 
 /**
  * @author TeamworkGuy2
@@ -43,7 +41,7 @@ public class ReadMatchingTest {
 				"a\\"
 		};
 
-		CheckTask.assertTests(inputs, expected, (str) -> {
+		CheckTask.assertTests(inputs, expected, (String str) -> {
 			StringBuilder strB = new StringBuilder();
 			TextParserImpl in = TextParserImpl.of(str);
 
@@ -126,7 +124,7 @@ public class ReadMatchingTest {
 				Arrays.asList("stuff", "1.2.3 ", " 010\"11\"")
 		};
 
-		CheckTask.assertTests(inputs, expected, (str) -> {
+		CheckTask.assertTests(inputs, expected, (String str) -> {
 			StringBuilder strB = new StringBuilder();
 			TextParserImpl in = TextParserImpl.of(str);
 			List<String> parsedElems = new ArrayList<>();

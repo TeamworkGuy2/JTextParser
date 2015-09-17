@@ -1,7 +1,7 @@
 package parserUtils;
 
 import textParser.TextParser;
-import dataType.CharCategory;
+import twg2.ranges.helpers.CharCategory;
 import functionUtils.CharPredicate;
 
 /**

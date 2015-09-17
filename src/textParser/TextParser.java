@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.PushbackReader;
 
-import dataType.CharCategory;
+import twg2.ranges.helpers.CharCategory;
 import functionUtils.CharPredicate;
 
 /** A buffered reader like class that reads lines and also allows the current line
