@@ -11,7 +11,7 @@ import java.io.PushbackReader;
  * @author TeamworkGuy2
  * @since 2015-1-15
  */
-public interface LineReader extends Closeable {
+public interface LineReader extends Closeable, ParserPos {
 
 	/**
 	 * @return true if the line's offset has not be modified, false if the offset has been modified
@@ -19,27 +19,30 @@ public interface LineReader extends Closeable {
 	public boolean isUnmodifiedLine();
 
 
+	/**
+	 * @return the parser's current, 0 based, position within the underlying data stream, useful for {@link #substring(int, int)}
+	 */
+	@Override
+	public int getPosition();
+
+
 	/** Get the plain line number of the current line.
 	 * The first line read is 1.
 	 * @return the current line number
 	 */
-	public int getPlainLineNumber();
+	@Override
+	public int getLineNumber();
 
 
 	/**
-	 * @return the absolute character offset from the beginning of the file
+	 * @return the current line character offset, 1 based
 	 */
-	public int getAbsoluteOffset();
+	@Override
+	public int getColumnNumber();
 
 
 	/**
-	 * @return the parser's current position within the underlying data stream, useful for {@link #substring(int, int)}
-	 */
-	public int getPosition();
-
-
-	/**
-	 * @return the current line character offset
+	 * @return the current line character offset, 0 based
 	 */
 	public int getLineOffset();
 

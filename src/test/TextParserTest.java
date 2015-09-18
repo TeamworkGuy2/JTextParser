@@ -190,6 +190,7 @@ public class TextParserTest {
 			ReadPeek.peekNext(buf);
 			while((remaining = buf.getLineRemaining()) > 0) {
 				Assert.assertEquals(curLineLen - charI, buf.getLineRemaining());
+				buf.nextChar();
 				charI++;
 			}
 			i++;

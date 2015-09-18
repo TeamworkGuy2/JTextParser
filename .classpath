@@ -10,5 +10,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="C:/Users/TeamworkGuy2/Documents/Java/Libraries/jprimitive-collections/jar/jprimitive_collections.jar" sourcepath="/JPrimitiveCollections"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/TestUtil"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Lombok"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

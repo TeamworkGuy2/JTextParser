@@ -46,7 +46,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 	 * @param reader the buffered reader to read the lines of text from
 	 */
 	public TextParserImpl(PeekableIterator<String> reader) {
-		this(reader, true, 0);
+		this(reader, true, 1);
 	}
 
 
@@ -56,7 +56,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 	 * This is a shortcut for explicitly specifying a {@code transform} function that adds newlines
 	 */
 	public TextParserImpl(PeekableIterator<String> reader, boolean injectNewlines) {
-		this(reader, injectNewlines, 0);
+		this(reader, injectNewlines, 1);
 	}
 
 
@@ -78,7 +78,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 	 * This is a shortcut for explicitly specifying a {@code transform} function that adds newlines
 	 */
 	public TextParserImpl(PeekableIterator<String> reader, Function<String, String> transform, boolean injectNewlines) {
-		this(reader, transform, injectNewlines, 0);
+		this(reader, transform, injectNewlines, 1);
 	}
 
 
@@ -104,25 +104,21 @@ public final class TextParserImpl implements TextParser, Closeable {
 	}
 
 
-	/** Get the plain line number of the current line of text.
-	 * The first line read is 1.
-	 * @return the current line number
-	 */
 	@Override
-	public int getPlainLineNumber() {
+	public int getPosition() {
+		return previousLinesOffset + offset;
+	}
+
+
+	@Override
+	public int getLineNumber() {
 		return lineNum;
 	}
 
 
 	@Override
-	public int getAbsoluteOffset() {
-		return previousLinesOffset + offset;
-	}
-
-
-	@Override
-	public int getPosition() {
-		return previousLinesOffset + offset;
+	public int getColumnNumber() {
+		return offset + 1;
 	}
 
 

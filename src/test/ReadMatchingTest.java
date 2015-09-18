@@ -69,7 +69,7 @@ public class ReadMatchingTest {
 
 			ReadUnescape.Default.readUnescapePartialQuoted(in, '"', '\\', ',', ']', strB);
 
-			int index = in.getAbsoluteOffset();
+			int index = in.getPosition();
 			Assert.assertEquals(expect.get(i), strB.toString());
 			Assert.assertEquals(i + ". expect (" + expectIndex.get(i) + "): " + expect.get(i) + ", result (" + index + "): " + strB.toString(), (int)expectIndex.get(i), index + offset + 1);
 			dst.setLength(0);

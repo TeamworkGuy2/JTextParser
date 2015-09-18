@@ -214,7 +214,7 @@ public interface TextParser extends LineReader, Closeable {
 
 
 	public default String getPositionDisplayText() {
-		return this.getPlainLineNumber() + ":" + this.getLineOffset();
+		return this.getLineNumber() + ":" + this.getLineOffset();
 	}
 
 }
