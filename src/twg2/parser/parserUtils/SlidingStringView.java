@@ -1,4 +1,4 @@
-package parserUtils;
+package twg2.parser.parserUtils;
 
 import twg2.collections.util.arrayUtils.ArrayUtil;
 

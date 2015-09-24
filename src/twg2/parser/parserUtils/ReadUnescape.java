@@ -1,9 +1,9 @@
-package parserUtils;
+package twg2.parser.parserUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-import textParser.TextParser;
+import twg2.parser.textParser.TextParser;
 
 /**
  * @author TeamworkGuy2

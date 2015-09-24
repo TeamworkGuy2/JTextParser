@@ -1,13 +1,13 @@
-package test;
+package twg2.parser.test;
 
 import java.util.function.Function;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import parserUtils.ReadMatching;
-import parserUtils.ReadPeek;
-import textParser.TextParserImpl;
+import twg2.parser.parserUtils.ReadMatching;
+import twg2.parser.parserUtils.ReadPeek;
+import twg2.parser.textParser.TextParserImpl;
 import checks.CheckTask;
 
 public class TextParserTest {
@@ -152,10 +152,11 @@ public class TextParserTest {
 
 	@Test
 	public void testReadLine() {
-		TextParserImpl buf = TextParserImpl.of("\tstring a\n\tstring b\n3");
+		TextParserImpl buf = TextParserImpl.of("\tstring a\n\tstring b\n\n3");
 		String[] expect = {
 				"\tstring a",
 				"\tstring b",
+				"",
 				"3"
 		};
 

@@ -1,4 +1,4 @@
-package textParser;
+package twg2.parser.textParser;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

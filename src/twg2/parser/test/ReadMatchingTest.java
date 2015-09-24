@@ -1,4 +1,4 @@
-package test;
+package twg2.parser.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,9 +7,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import parserUtils.ReadMatching;
-import parserUtils.ReadUnescape;
-import textParser.TextParserImpl;
+import test.StringConvertTest;
+import twg2.parser.parserUtils.ReadMatching;
+import twg2.parser.parserUtils.ReadUnescape;
+import twg2.parser.textParser.TextParserImpl;
 import checks.CheckTask;
 
 /**

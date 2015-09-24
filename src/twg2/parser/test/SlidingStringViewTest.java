@@ -1,9 +1,9 @@
-package test;
+package twg2.parser.test;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import parserUtils.SlidingStringView;
+import twg2.parser.parserUtils.SlidingStringView;
 import checks.CheckTask;
 
 /**

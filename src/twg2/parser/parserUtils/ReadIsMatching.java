@@ -1,6 +1,6 @@
-package parserUtils;
+package twg2.parser.parserUtils;
 
-import textParser.TextParser;
+import twg2.parser.textParser.TextParser;
 import twg2.ranges.helpers.CharCategory;
 import functionUtils.CharPredicate;
 

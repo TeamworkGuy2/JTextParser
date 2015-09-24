@@ -1,11 +1,11 @@
-package parserUtils;
+package twg2.parser.parserUtils;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.IntSupplier;
 
-import textParser.TextParser;
+import twg2.parser.textParser.TextParser;
 
-/** Static functions to test conditional tasks
+/** Static functions to twg2.parser.test conditional tasks
  * @author TeamworkGuy2
  * @since 2015-7-16
  */

@@ -1,10 +1,10 @@
-package test;
+package twg2.parser.test;
 
 import java.io.IOException;
 import java.util.function.BiFunction;
 
-import textParser.TextParser;
-import textParser.TextParserImpl;
+import twg2.parser.textParser.TextParser;
+import twg2.parser.textParser.TextParserImpl;
 
 /**
  * @author TeamworkGuy2

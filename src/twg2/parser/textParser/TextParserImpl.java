@@ -1,4 +1,4 @@
-package textParser;
+package twg2.parser.textParser;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -8,11 +8,11 @@ import java.io.UncheckedIOException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import parserUtils.SlidingStringView;
 import streamUtils.EnhancedIterator;
 import streamUtils.PeekableIterator;
 import streamUtils.StringLineSupplier;
 import twg2.collections.util.arrayUtils.ArrayUtil;
+import twg2.parser.parserUtils.SlidingStringView;
 import twg2.ranges.CharSearcher;
 import twg2.ranges.helpers.CharCategory;
 import functionUtils.CharPredicate;

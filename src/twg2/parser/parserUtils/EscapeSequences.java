@@ -1,4 +1,4 @@
-package parserUtils;
+package twg2.parser.parserUtils;
 
 import java.util.function.Function;
 

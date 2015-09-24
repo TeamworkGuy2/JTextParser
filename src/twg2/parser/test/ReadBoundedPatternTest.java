@@ -1,4 +1,4 @@
-package test;
+package twg2.parser.test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import parserUtils.ReadBoundedPattern;
+import twg2.parser.parserUtils.ReadBoundedPattern;
 
 /**
  * @author TeamworkGuy2
