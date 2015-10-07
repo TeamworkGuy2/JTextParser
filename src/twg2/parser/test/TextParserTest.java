@@ -5,9 +5,9 @@ import java.util.function.Function;
 import org.junit.Assert;
 import org.junit.Test;
 
-import twg2.parser.parserUtils.ReadMatching;
-import twg2.parser.parserUtils.ReadPeek;
 import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParserUtils.ReadMatching;
+import twg2.parser.textParserUtils.ReadPeek;
 import checks.CheckTask;
 
 public class TextParserTest {

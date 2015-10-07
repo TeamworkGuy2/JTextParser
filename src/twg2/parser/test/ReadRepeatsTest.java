@@ -3,7 +3,7 @@ package twg2.parser.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import twg2.parser.parserUtils.ReadRepeats;
+import twg2.parser.textParserUtils.ReadRepeats;
 
 /**
  * @author TeamworkGuy2

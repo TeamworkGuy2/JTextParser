@@ -12,7 +12,7 @@ import streamUtils.EnhancedIterator;
 import streamUtils.PeekableIterator;
 import streamUtils.StringLineSupplier;
 import twg2.collections.util.arrayUtils.ArrayUtil;
-import twg2.parser.parserUtils.SlidingStringView;
+import twg2.parser.textParserUtils.SlidingStringView;
 import twg2.ranges.CharSearcher;
 import twg2.ranges.helpers.CharCategory;
 import functionUtils.CharPredicate;

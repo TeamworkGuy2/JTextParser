@@ -1,4 +1,4 @@
-package twg2.parser.parserUtils;
+package twg2.parser.textParserUtils;
 
 /**
  * @author TeamworkGuy2

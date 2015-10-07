@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import twg2.parser.parserUtils.ReadBoundedPattern;
+import twg2.parser.textParserUtils.ReadBoundedPattern;
 
 /**
  * @author TeamworkGuy2

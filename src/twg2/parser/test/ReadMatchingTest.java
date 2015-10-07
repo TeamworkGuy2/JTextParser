@@ -7,10 +7,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import test.StringConvertTest;
-import twg2.parser.parserUtils.ReadMatching;
-import twg2.parser.parserUtils.ReadUnescape;
 import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParserUtils.ReadMatching;
+import twg2.parser.textParserUtils.ReadUnescape;
+import twg2.text.test.StringEscapeTest;
 import checks.CheckTask;
 
 /**
@@ -59,9 +59,9 @@ public class ReadMatchingTest {
 	@Test
 	public void testReadUnescapePartialQuoted2() {
 		int offset = 3;
-		List<String> inputs = StringConvertTest.UnescapePartialQuoted.getInputs();
-		List<String> expect = StringConvertTest.UnescapePartialQuoted.getExpectedResults();
-		List<Integer> expectIndex = StringConvertTest.UnescapePartialQuoted.getExpectedIndices();
+		List<String> inputs = StringEscapeTest.UnescapePartialQuoted.getInputs();
+		List<String> expect = StringEscapeTest.UnescapePartialQuoted.getExpectedResults();
+		List<Integer> expectIndex = StringEscapeTest.UnescapePartialQuoted.getExpectedIndices();
 		StringBuilder dst = new StringBuilder();
 
 		for(int i = 0, size = inputs.size(); i < size; i++) {

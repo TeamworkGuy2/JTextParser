@@ -3,9 +3,9 @@ package twg2.parser.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import twg2.parser.parserUtils.ReadWhitespace;
 import twg2.parser.textParser.TextParser;
 import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParserUtils.ReadWhitespace;
 
 /**
  * @author TeamworkGuy2

@@ -1,7 +1,7 @@
-package twg2.parser.parserUtils;
+package twg2.parser.textParserUtils;
 
-import stringUtils.StringCheck;
 import twg2.parser.textParser.TextParser;
+import twg2.text.stringUtils.StringCheck;
 
 /** A tool for parsing specified characters from a line buffer
  * @author TeamworkGuy2

@@ -3,7 +3,7 @@ package twg2.parser.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import twg2.parser.parserUtils.SlidingStringView;
+import twg2.parser.textParserUtils.SlidingStringView;
 import checks.CheckTask;
 
 /**

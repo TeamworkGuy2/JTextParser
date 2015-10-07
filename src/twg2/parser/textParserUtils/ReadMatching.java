@@ -1,13 +1,13 @@
-package twg2.parser.parserUtils;
+package twg2.parser.textParserUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
 
-import stringUtils.StringCompare;
-import stringUtils.StringIndex;
 import twg2.collections.util.arrayUtils.ArrayUtil;
 import twg2.parser.textParser.TextParser;
+import twg2.text.stringUtils.StringCompare;
+import twg2.text.stringUtils.StringIndex;
 import functionUtils.CharPredicate;
 
 /**
