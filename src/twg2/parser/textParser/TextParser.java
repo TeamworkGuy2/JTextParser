@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.PushbackReader;
 
+import twg2.functions.Predicates;
 import twg2.ranges.helpers.CharCategory;
-import functionUtils.CharPredicate;
 
 /** A buffered reader like class that reads lines and also allows the current line
  * to be fully or partially unread.
@@ -123,7 +123,7 @@ public interface TextParser extends LineReader, Closeable {
 	 * @param dst the destination to store the parsed text in
 	 * @return the number of characters read
 	 */
-	public int nextIf(CharPredicate condition, int count, Appendable dst);
+	public int nextIf(Predicates.Char condition, int count, Appendable dst);
 
 
 	/** Read as many characters as do not match, up to {@code count}, from the current line

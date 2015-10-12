@@ -12,10 +12,10 @@ import streamUtils.EnhancedIterator;
 import streamUtils.PeekableIterator;
 import streamUtils.StringLineSupplier;
 import twg2.collections.util.arrayUtils.ArrayUtil;
+import twg2.functions.Predicates;
 import twg2.parser.textParserUtils.SlidingStringView;
 import twg2.ranges.CharSearcher;
 import twg2.ranges.helpers.CharCategory;
-import functionUtils.CharPredicate;
 
 /** A buffered reader like class that reads lines and also allows the last line
  * to be fully or partially unread.
@@ -387,7 +387,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 
 
 	@Override
-	public int nextIf(CharPredicate condition, int count, Appendable dst) {
+	public int nextIf(Predicates.Char condition, int count, Appendable dst) {
 		try {
 			count = (count == 0 ? Integer.MAX_VALUE : count);
 			int i = 0;
