@@ -117,7 +117,60 @@ public class TextParserTest {
 
 
 	@Test
-	public void testReadLines() {
+	public void positionTest() {
+		String str =
+			"\tstring a\n" +
+			"\tstring b\n" +
+			"\n" +
+			"3";
+		TextParserImpl buf = TextParserImpl.of(str);
+
+		Assert.assertTrue(buf.getPosition() == -1);
+		buf.hasNext();
+		char ch = buf.nextChar();
+		Assert.assertEquals(str.charAt(0), ch);
+		Assert.assertEquals(0, buf.getPosition());
+		Assert.assertEquals(1, buf.getLineNumber());
+		Assert.assertEquals(1, buf.getColumnNumber());
+
+		buf.readLine();
+		ch = buf.nextChar();
+		Assert.assertEquals('\t', ch);
+		Assert.assertEquals(10, buf.getPosition());
+		Assert.assertEquals(2, buf.getLineNumber());
+		Assert.assertEquals(1, buf.getColumnNumber());
+	}
+
+
+	@Test
+	public void readLineTest() {
+		TextParserImpl buf = TextParserImpl.of(
+			"\tstring a\n" +
+			"\tstring b\n" +
+			"\n" +
+			"3"
+		);
+		String[] expect = {
+				"\tstring a",
+				"\tstring b",
+				"",
+				"3"
+		};
+
+		StringBuilder strB = new StringBuilder();
+		int i = 0;
+		while(buf.hasNext()) {
+			buf.readLine(strB);
+
+			Assert.assertEquals("lines not equal", expect[i], strB.toString());
+			strB.setLength(0);
+			i++;
+		}
+	}
+
+
+	@Test
+	public void readLinesTest() {
 		{
 			TextParserImpl buf = TextParserImpl.of("\tstring a\n\tstring b\n3");
 			String[] expect = {
@@ -151,29 +204,7 @@ public class TextParserTest {
 
 
 	@Test
-	public void testReadLine() {
-		TextParserImpl buf = TextParserImpl.of("\tstring a\n\tstring b\n\n3");
-		String[] expect = {
-				"\tstring a",
-				"\tstring b",
-				"",
-				"3"
-		};
-
-		StringBuilder strB = new StringBuilder();
-		int i = 0;
-		while(buf.hasNext()) {
-			buf.readLine(strB);
-
-			Assert.assertEquals("lines not equal", expect[i], strB.toString());
-			strB.setLength(0);
-			i++;
-		}
-	}
-
-
-	@Test
-	public void testLineReminaing() {
+	public void lineReminaingTest() {
 		TextParserImpl buf = TextParserImpl.of("\tstring a\nabc\n3");
 		String[] expect = {
 				"\tstring a\n",

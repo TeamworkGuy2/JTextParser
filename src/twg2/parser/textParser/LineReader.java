@@ -20,7 +20,8 @@ public interface LineReader extends Closeable, ParserPos {
 
 
 	/**
-	 * @return the parser's current, 0 based, position within the underlying data stream, useful for {@link #substring(int, int)}
+	 * @return the parser's current, 0 based, position within the underlying data stream, useful for {@link #substring(int, int)}.
+	 * NOTE: returns -1 if the parser is not initialized
 	 */
 	@Override
 	public int getPosition();
@@ -44,19 +45,19 @@ public interface LineReader extends Closeable, ParserPos {
 	/**
 	 * @return the current line character offset, 0 based
 	 */
-	public int getLineOffset();
+	//public int getLineOffset();
 
 
 	/**
 	 * @return the length of the current line
 	 */
-	public int getLineLength();
+	//public int getLineLength();
 
 
 	/**
 	 * @return the number of characters remaining unread in the current line
 	 */
-	public int getLineRemaining();
+	//public int getLineRemaining();
 
 
 	/**
@@ -75,9 +76,9 @@ public interface LineReader extends Closeable, ParserPos {
 
 
 	/** Unread {@code count} number from the current line offset.
-	 * For example if the last call to {@link #getLineOffset()} returned {@code 5}
+	 * For example if the last call to {@link #getColumnNumber()} returned {@code 5}
 	 * and this function is called with the parameter {@code 3}, the next call
-	 * to {@link #getLineOffset()} returns {@code 2}.
+	 * to {@link #getColumnNumber()} returns {@code 2}.
 	 * @param count the number to subtract from the current line offset
 	 */
 	public void unread(int count);

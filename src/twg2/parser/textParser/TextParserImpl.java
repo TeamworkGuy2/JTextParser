@@ -33,7 +33,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 	private String nextLine;
 	private int previousLinesOffset;
 	private int lineNum;
-	private int offset;
+	private int offset = -1;
 	private int lineMod;
 	private boolean started = false;
 	@SuppressWarnings("unused")
@@ -132,19 +132,19 @@ public final class TextParserImpl implements TextParser, Closeable {
 	 * This offset is caused by calls to {@link #unread(int)}.
 	 * @return the offset of the current line within the original line.
 	 */
-	@Override
+	// TODO deprecating @Override
 	public int getLineOffset() {
 		return offset;
 	}
 
 
-	@Override
+	// TODO deprecating @Override
 	public int getLineLength() {
 		return curLineChars.length;
 	}
 
 
-	@Override
+	// TODO deprecating @Override
 	public int getLineRemaining() {
 		// - 1 because nextChar() returns the next offset, so only (remaining - 1) characters can be read
 		int remaining = this.curLineChars.length - this.offset - 1;

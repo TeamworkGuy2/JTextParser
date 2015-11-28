@@ -58,6 +58,7 @@ public class ParseDataTypeTest {
 
 
 	public static void main(String[] args) throws IOException {
+		new TextParserTest().positionTest();
 		/*
 		NumericLiteral numParser = new NumericLiteral();
 		readIntTest((in, dest) -> numParser.readElement(in, dest));
