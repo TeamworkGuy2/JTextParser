@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-import twg2.collections.util.arrayUtils.ArrayUtil;
+import twg2.arrays.ArrayUtil;
 
 /**
  * This class is not thread safe

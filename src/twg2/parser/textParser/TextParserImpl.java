@@ -8,14 +8,14 @@ import java.io.UncheckedIOException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import streamUtils.EnhancedIterator;
-import streamUtils.PeekableIterator;
-import streamUtils.StringLineSupplier;
-import twg2.collections.util.arrayUtils.ArrayUtil;
+import twg2.arrays.ArrayUtil;
 import twg2.functions.Predicates;
 import twg2.parser.textParserUtils.SlidingStringView;
 import twg2.ranges.CharSearcher;
 import twg2.ranges.helpers.CharCategory;
+import twg2.streams.EnhancedIterator;
+import twg2.streams.PeekableIterator;
+import twg2.streams.StringLineSupplier;
 
 /** A buffered reader like class that reads lines and also allows the last line
  * to be fully or partially unread.
