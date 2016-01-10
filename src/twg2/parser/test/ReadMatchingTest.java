@@ -10,6 +10,7 @@ import org.junit.Test;
 import twg2.parser.textParser.TextParserImpl;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadUnescape;
+import twg2.parser.textParserUtils.SearchRange;
 import twg2.text.test.StringEscapeTest;
 import checks.CheckTask;
 
@@ -126,21 +127,44 @@ public class ReadMatchingTest {
 		};
 
 		CheckTask.assertTests(inputs, expected, (String str) -> {
-			StringBuilder strB = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			TextParserImpl in = TextParserImpl.of(str);
 			List<String> parsedElems = new ArrayList<>();
 
 			while(in.hasNext()) {
-				ReadUnescape.Default.readUnescapePartialQuoted(in, '"', '\\', ',', ']', strB);
-				parsedElems.add(strB.toString());
+				ReadUnescape.Default.readUnescapePartialQuoted(in, '"', '\\', ',', ']', sb);
+				parsedElems.add(sb.toString());
 
-				in.nextIf(',', ']', strB);
-				strB.setLength(0);
+				in.nextIf(',', ']', sb);
+				sb.setLength(0);
 			}
-
-			System.out.println(parsedElems);
 			return parsedElems;
 		});
+	}
+
+
+	@Test
+	public void binaryStartsWithTest() {
+		List<String> strs = Arrays.asList(
+				"Barney",
+				"Billy",
+				"Cali",
+				"Straight",
+				"Top Hat"
+		);
+		SearchRange range = new SearchRange();
+
+		range.reset(5);
+		StringBuilder searchSb = new StringBuilder("Bill");
+		Assert.assertEquals(1, ReadMatching.binaryStartsWith(range, strs, searchSb));
+
+		range.reset(5);
+		searchSb = new StringBuilder("D");
+		Assert.assertEquals(-4, ReadMatching.binaryStartsWith(range, strs, searchSb));
+
+		range.reset(5);
+		searchSb = new StringBuilder("Xyz");
+		Assert.assertEquals(-6, ReadMatching.binaryStartsWith(range, strs, searchSb));
 	}
 
 

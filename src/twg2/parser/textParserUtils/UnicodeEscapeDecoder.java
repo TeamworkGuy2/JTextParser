@@ -17,12 +17,13 @@ public class UnicodeEscapeDecoder implements Function<String, String> {
 
 
 	public static void escape(String line, int off, StringBuilder dst) {
+		char[] tmpEscCodePoint = new char[2];
 		final int size = line.length();
 		int read = off;
 		for( ; read < size; ) {
-			char curChar = line.charAt(read);
+			char ch = line.charAt(read);
 			// If an escape characters is found, process an escape code or any unicode points
-			if(curChar == EscapeSequences.escapeStart) {
+			if(ch == EscapeSequences.escapeStart) {
 				// Read all escape slashes '\'
 				int escapeCount = 1;
 				read++;
@@ -43,31 +44,37 @@ public class UnicodeEscapeDecoder implements Function<String, String> {
 						int escLen = ReadRepeats.readRepeat(line, read, EscapeSequences.escapeIdentifiers, 1, dst);
 						String escapeStr = dst.substring(dst.length() - escLen);
 						read += escLen;
-						//System.out.println("Found escape: [" + escapeStr + "],\t remaining: " + line.substring(read));
 						// An escape character (for example: \ r, \ t, \ ", etc)
 						if(escapeStr.length() != 1) {
 							throw new IllegalArgumentException("invalid character escape sequence");
 						}
 					}
 
-					// Else check for four valid hexidecimal values, convert to a unicode character
+					// Else check for four valid hexadecimal values, convert to a unicode character
 					else {
 						int unicodeLen = ReadRepeats.readRepeat(line, read, EscapeSequences.unicodeLiterals, 4, dst);
 						String unicodeStr = dst.substring(dst.length() - unicodeLen);
-						//System.out.println("Found unicode: " + line.substring(read));
+						dst.setLength(dst.length() - unicodeLen);
 						read += unicodeStr.length();
 
 						// If there are an invalid number of hexidecimal values, throw an error
 						if(unicodeStr.length() < 4) {
 							throw new IllegalArgumentException("invalid unicode character");
 						}
-						dst.append((char)Integer.parseInt(unicodeStr, 16));
+
+						int escNum = Integer.parseInt(unicodeStr, 16);
+						int chCount = Character.toChars(escNum, tmpEscCodePoint, 0);
+
+						dst.append(tmpEscCodePoint[0]);
+						if(chCount > 1) {
+							dst.append(tmpEscCodePoint[1]);
+						}
 					}
 				}
 			}
 			// Else append a standard character to the string
 			else {
-				dst.append(curChar);
+				dst.append(ch);
 				read++;
 			}
 			//System.out.println("Building: " + str.toString() + ",\t remaining: " + line.substring(read));

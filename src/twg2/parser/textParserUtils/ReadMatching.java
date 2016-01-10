@@ -168,12 +168,11 @@ public class ReadMatching {
 
 
 	/** Binary search a list of strings for a specified string builder matching one of the strings
+	 * @return the closest match index or a negative index - 1 of the position where the closest match would be if there were any
 	 */
-	public static final int binaryStartsWith(SearchRange range, List<String> strs, int midIndex, StringBuilder key) {
+	public static final int binaryStartsWith(SearchRange range, List<String> strs, StringBuilder key) {
 		while(range.low <= range.high) {
 			int mid = range.getMid();
-			// TODO remove testing
-			System.out.println("compareStr: " + strs.get(mid) + " vs. " + key + " = " + StringCompare.compareStartsWith(strs.get(mid), key, 0));
 			int cmp = StringCompare.compareStartsWith(strs.get(mid), key, 0);
 			if(cmp < 0) {
 				range.low = mid + 1;

@@ -1,5 +1,6 @@
 JTextParser
 ==============
+version: 0.5.0
 
 Contains 2 major packages:
 * textParser - a set of interfaces and implementation for reading a stream of input text lines using conditional methods like nextIf() and nextIfNot()

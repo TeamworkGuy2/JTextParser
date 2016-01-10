@@ -10,10 +10,20 @@ public class SearchRange {
 	int high;
 
 
-	public void reset(int high) {
+	public SearchRange() {
+	}
+
+
+	public SearchRange(int lowInclusive, int highExclusive) {
+		this.low = lowInclusive;
+		this.high = highExclusive;
+	}
+
+
+	public void reset(int highExclusive) {
 		this.low = 0;
-		this.high = high-1;
-		this.initialRange = high - low;
+		this.high = highExclusive - 1;
+		this.initialRange = highExclusive - low;
 	}
 
 
@@ -27,9 +37,12 @@ public class SearchRange {
 	public int getMid() {
 		// weighted toward the lower end of the search range as the search range closes upward
 		int range = (high - low);
-		int mid = ((low + high) >>> 1) - (range != 0 ? (int)(initialRange/range * (0.25f)) : 0);
+		int mid = ((low + high) >>> 1) - (range > 1 ? (int)(initialRange/range * 0.25f) : 0);
 		mid = mid < low ? low : mid;
-		System.out.println("range: low=" + low + " high=" + high + " mid=" + mid);
+
+		// TODO debugging
+		System.out.println("range: low=" + low + " high=" + high + " mid=" + mid + " rng=" + range);
+
 		return mid;
 	}
 
