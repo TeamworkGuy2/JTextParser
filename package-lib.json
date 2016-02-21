@@ -1,0 +1,16 @@
+{
+	"version" : "0.6.0",
+	"name" : "jtext-parser",
+	"description" : "Parsing tools for transforming input text to destination buffers. Useful intermediate layer for token parsing. Designed to parse strictly formatted text, like source code",
+	"homepage" : "https://github.com/TeamworkGuy2/JTextParser",
+	"license" : "MIT",
+	"main" : "./jar/jtext_parser.jar",
+	"dependencies" : {
+		"jarray-util": "*",
+		"jfunc": "*",
+		"jprimitive-collections": "*",
+		"jrange": "*",
+		"jstreamish": "*",
+		"jtext-util": "*"
+	}
+}

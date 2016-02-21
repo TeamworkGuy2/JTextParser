@@ -16,12 +16,6 @@ import twg2.ranges.helpers.CharCategory;
  */
 public interface TextParser extends LineReader, Closeable {
 
-	/**
-	 * @return true if there is another line, false otherwise
-	 */
-	public boolean hasNextLine();
-
-
 	/** Read the next character from the line
 	 * @param ch the character to match
 	 * @return true if the next char was read and matched the specified char, false if not (and the line buffer is left unmodified)
@@ -198,6 +192,11 @@ public interface TextParser extends LineReader, Closeable {
 
 
 	public int nextBetween(char lower, char upper, int count, Appendable dst);
+
+	/**
+	 * @return true if there is another line, false otherwise
+	 */
+	public boolean hasNextLine();
 
 
 	public default String readLine() {

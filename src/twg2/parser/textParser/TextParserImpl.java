@@ -5,7 +5,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.UncheckedIOException;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import twg2.arrays.ArrayUtil;
@@ -25,19 +24,16 @@ import twg2.streams.StringLineSupplier;
  * @since 2013-12-10
  */
 public final class TextParserImpl implements TextParser, Closeable {
-	private char newline = '\n';
 	private PeekableIterator<String> in;
-	private Function<String, String> pipe;
 	private char[] curLineChars;
 	private String currentLine;
+	private char[] nextLineChars;
 	private String nextLine;
 	private int previousLinesOffset;
 	private int lineNum;
 	private int offset = -1;
 	private int lineMod;
 	private boolean started = false;
-	@SuppressWarnings("unused")
-	private boolean addNewlines;
 	private boolean returned;
 	private SlidingStringView textBuf;
 
@@ -46,54 +42,17 @@ public final class TextParserImpl implements TextParser, Closeable {
 	 * @param reader the buffered reader to read the lines of text from
 	 */
 	public TextParserImpl(PeekableIterator<String> reader) {
-		this(reader, true, 1);
+		this(reader, 1);
 	}
 
 
 	/** Create a line buffer with a {@link BufferedReader} source
 	 * @param reader the buffered reader to read the lines of text from
-	 * @param injectNewlines true to add newlines to the end of each line read from {@code reader}, false to leave the lines as is.
-	 * This is a shortcut for explicitly specifying a {@code transform} function that adds newlines
-	 */
-	public TextParserImpl(PeekableIterator<String> reader, boolean injectNewlines) {
-		this(reader, injectNewlines, 1);
-	}
-
-
-	/** Create a line buffer with a {@link BufferedReader} source
-	 * @param reader the buffered reader to read the lines of text from
-	 * @param injectNewlines true to add newlines to the end of each line read from {@code reader}, false to leave the lines as is.
-	 * This is a shortcut for explicitly specifying a {@code transform} function that adds newlines
 	 * @param lastLineNum the starting line number of this line buffer
 	 */
-	public TextParserImpl(PeekableIterator<String> reader, boolean injectNewlines, int lastLineNum) {
-		this(reader, null, injectNewlines, lastLineNum);
-	}
-
-
-	/** Create a line buffer with a {@link BufferedReader} source
-	 * @param reader the buffered reader to read the lines of text from
-	 * @param transform a function that will be applied to each line of text read from the source buffer
-	 * @param injectNewlines true to add newlines to the end of each line read from {@code reader}, false to leave the lines as is.
-	 * This is a shortcut for explicitly specifying a {@code transform} function that adds newlines
-	 */
-	public TextParserImpl(PeekableIterator<String> reader, Function<String, String> transform, boolean injectNewlines) {
-		this(reader, transform, injectNewlines, 1);
-	}
-
-
-	/** Create a line buffer with a {@link BufferedReader} source
-	 * @param reader the buffered reader to read the lines of text from
-	 * @param transform a function that will be applied to each line of text read from the source buffer
-	 * @param injectNewlines true to add newlines {@code ()} to the end of each string read
-	 * from {@code reader}, except for the last string.  False to leave the strings as-is
-	 * @param lastLineNum the starting line number of this line buffer
-	 */
-	public TextParserImpl(PeekableIterator<String> reader, Function<String, String> transform, boolean injectNewlines, int lastLineNum) {
+	public TextParserImpl(PeekableIterator<String> reader, int lastLineNum) {
 		this.in = reader;
-		this.pipe = transform;
 		this.lineNum = lastLineNum;
-		this.addNewlines = injectNewlines;
 		this.textBuf = new SlidingStringView(4096);
 	}
 
@@ -154,8 +113,8 @@ public final class TextParserImpl implements TextParser, Closeable {
 
 	@Override
 	public boolean hasNext() {
-		String str;
-		return hasNextChar() || (str = peekNextLine()) != null && str.length() > 0;
+		char[] chs;
+		return hasNextChar() || (chs = peekNextLine()) != null && chs.length > 0;
 	}
 
 
@@ -170,13 +129,13 @@ public final class TextParserImpl implements TextParser, Closeable {
 	}
 
 
-	public String peekNextLine() {
+	public char[] peekNextLine() {
 		boolean firstCheck = !started;
 		if(firstCheck) {
 			nextLine();
 			unread(0);
 		}
-		return (firstCheck ? currentLine : nextLine);
+		return (firstCheck ? curLineChars : nextLineChars);
 	}
 
 
@@ -210,7 +169,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 					readI++;
 				}
 			} catch(IOException ioe) {
-				throw castToUnchecked(ioe);
+				throw new UncheckedIOException(ioe);
 			}
 		}
 		else {
@@ -701,7 +660,6 @@ public final class TextParserImpl implements TextParser, Closeable {
 			String line = in.hasNext() ? in.next() : null;
 			if(line != null) {
 				textBuf.append(line);
-				textBuf.append(newline);
 			}
 			currentLine = line;
 		}
@@ -715,27 +673,14 @@ public final class TextParserImpl implements TextParser, Closeable {
 		nextLine = in.hasNext() ? in.next() : null;
 		if(nextLine != null) {
 			textBuf.append(nextLine);
-			textBuf.append(newline);
 		}
 
-		if(!started && nextLine != null) {
-			currentLine = applyPipe(currentLine + newline);
-		}
-		nextLine = applyPipe(in.hasNext() ? nextLine + newline : nextLine);
 		started = true;
-
+		nextLineChars = nextLine != null ? nextLine.toCharArray() : null;
 		curLineChars = currentLine != null ? currentLine.toCharArray() : null;
 		offset = -1; // adjust offset so nextChar() returns the first char the first time it is called
 		previousLinesOffset += wasCurrentLine != null ? wasCurrentLine.length() : 0;
 		return currentLine;
-	}
-
-
-	private final String applyPipe(String line) {
-		if(pipe != null && line != null) {
-			line = pipe.apply(line);
-		}
-		return line;
 	}
 
 
@@ -768,27 +713,22 @@ public final class TextParserImpl implements TextParser, Closeable {
 	 * @see StringLineSupplier
 	 */
 	public static TextParserImpl of(String src) {
-		return TextParserImpl.of(src, 0, src.length(), true, true);
+		return TextParserImpl.of(src, 0, src.length(), true, true, true, true);
 	}
 
 
 	public static TextParserImpl of(String src, int off, int len) {
-		return of(src, off, len, true, true);
+		return of(src, off, len, true, true, true, true);
 	}
 
 
-	public static TextParserImpl of(String src, int off, int len, boolean treatEmptyLineAsLine, boolean treatEolNewlineAsTwoLines) {
+	public static TextParserImpl of(String src, int off, int len, boolean treatEmptyLineAsLine, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
 		//BufferedReader reader = new BufferedReader(new StringReader(src));
-		Supplier<String> lines = new StringLineSupplier(src, off, len, treatEmptyLineAsLine, treatEolNewlineAsTwoLines);
+		Supplier<String> lines = new StringLineSupplier(src, off, len, treatEmptyLineAsLine, treatEolNewlineAsTwoLines, includeNewlinesAtEndOfReturnedLines, collapseNewlinesIntoOneChar);
 		EnhancedIterator<String> lineReader = new EnhancedIterator<>(lines, null);
-		TextParserImpl lineBuffer = new TextParserImpl(lineReader, true);
+		TextParserImpl lineBuffer = new TextParserImpl(lineReader);
 
 		return lineBuffer;
-	}
-
-
-	private static final RuntimeException castToUnchecked(Exception e) {
-		return (RuntimeException)e;
 	}
 
 }
