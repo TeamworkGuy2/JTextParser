@@ -2,7 +2,7 @@
 ####0.7.0
 date: 2016-2-23
 
-commit: ?
+commit: d15b609afb2d77b293493a6372444e61a7019132
 
 * Removed LineReader.substring()
 * Removed TextParserImpl currentLine and nextLine fields

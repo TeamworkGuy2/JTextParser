@@ -694,7 +694,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 	/** Create a line buffer with a {@link PeekableIterator} source
 	 * @param reader the peekable iterator to read the lines of text from
 	 */
-	public static TextParserImpl fromStrings(PeekableIterator<String> reader, boolean inReturnsCharArray) {
+	public static TextParserImpl fromStrings(PeekableIterator<String> reader) {
 		TextParserImpl impl = new TextParserImpl(reader, false);
 		return impl;
 	}
@@ -713,7 +713,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 	/** Create a line buffer with a {@link PeekableIterator} source
 	 * @param reader the peekable iterator to read the lines of text from
 	 */
-	public static TextParserImpl fromCharArrays(PeekableIterator<char[]> reader, boolean inReturnsCharArray) {
+	public static TextParserImpl fromCharArrays(PeekableIterator<char[]> reader) {
 		TextParserImpl impl = new TextParserImpl(reader, true);
 		return impl;
 	}
