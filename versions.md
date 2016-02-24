@@ -1,8 +1,22 @@
 --------
+####0.7.0
+date: 2016-2-23
+
+commit: ?
+
+* Removed LineReader.substring()
+* Removed TextParserImpl currentLine and nextLine fields
+* Added StringLineSupplier from JStreamish and added new CharsLineSupplier and LineSupplier base class
+* Moved twg2.parser.test package into separate test directory
+* Removed TextParserImpl constructors in favor of static factory methods
+* Added TextParserImpl support for PeekableIterator<char[]> sources in addition to existing PeekableIterator<String> support
+
+
+--------
 ####0.6.0
 date: 2016-2-21
 
-commit: ?
+commit: ce375f75724a7aeae15722fbbd492a5a7530d1d7
 
 Moving toward stream/chunk based parsing rather than line based
 * Removed TextParser.hasNextLine()

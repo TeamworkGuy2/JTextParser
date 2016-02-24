@@ -20,7 +20,7 @@ public interface LineReader extends Closeable, ParserPos {
 
 
 	/**
-	 * @return the parser's current, 0 based, position within the underlying data stream, useful for {@link #substring(int, int)}.
+	 * @return the parser's current, 0 based, position within the underlying data stream
 	 * NOTE: returns -1 if the parser is not initialized
 	 */
 	@Override
@@ -102,6 +102,6 @@ public interface LineReader extends Closeable, ParserPos {
 	 * @param endIndex exclusive
 	 * @return substring from this line reader between the specified indices
 	 */
-	public String substring(int startIndex, int endIndex);
+	//public String substring(int startIndex, int endIndex);
 
 }

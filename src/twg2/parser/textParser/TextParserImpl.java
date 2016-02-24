@@ -9,14 +9,13 @@ import java.util.function.Supplier;
 
 import twg2.arrays.ArrayUtil;
 import twg2.functions.Predicates;
-import twg2.parser.textParserUtils.SlidingStringView;
+import twg2.parser.textStream.StringLineSupplier;
 import twg2.ranges.CharSearcher;
 import twg2.ranges.helpers.CharCategory;
 import twg2.streams.EnhancedIterator;
 import twg2.streams.PeekableIterator;
-import twg2.streams.StringLineSupplier;
 
-/** A buffered reader like class that reads lines and also allows the last line
+/** A buffered text reader with conditional read methods that reads lines of text and allows the current line
  * to be fully or partially unread.
  * @see PushbackReader
  * @see BufferedReader
@@ -24,36 +23,39 @@ import twg2.streams.StringLineSupplier;
  * @since 2013-12-10
  */
 public final class TextParserImpl implements TextParser, Closeable {
-	private PeekableIterator<String> in;
+	private PeekableIterator<Object> in;
+	private boolean inReturnsCharArray;
 	private char[] curLineChars;
-	private String currentLine;
+	//private String currentLine;
 	private char[] nextLineChars;
-	private String nextLine;
+	//private String nextLine;
 	private int previousLinesOffset;
 	private int lineNum;
 	private int offset = -1;
 	private int lineMod;
 	private boolean started = false;
 	private boolean returned;
-	private SlidingStringView textBuf;
+	//private SlidingStringView textBuf;
 
 
-	/** Create a line buffer with a {@link BufferedReader} source
+	/** Create a line buffer with a {@link PeekableIterator} source
 	 * @param reader the buffered reader to read the lines of text from
 	 */
-	public TextParserImpl(PeekableIterator<String> reader) {
-		this(reader, 1);
+	protected TextParserImpl(PeekableIterator<? extends Object> reader, boolean inReturnsCharArray) {
+		this(reader, inReturnsCharArray, 1);
 	}
 
 
-	/** Create a line buffer with a {@link BufferedReader} source
+	/** Create a line buffer with a {@link PeekableIterator} source
 	 * @param reader the buffered reader to read the lines of text from
 	 * @param lastLineNum the starting line number of this line buffer
 	 */
-	public TextParserImpl(PeekableIterator<String> reader, int lastLineNum) {
-		this.in = reader;
+	@SuppressWarnings("unchecked")
+	protected TextParserImpl(PeekableIterator<? extends Object> reader, boolean inReturnsCharArray, int lastLineNum) {
+		this.in = (PeekableIterator<Object>)reader;
+		this.inReturnsCharArray = inReturnsCharArray;
 		this.lineNum = lastLineNum;
-		this.textBuf = new SlidingStringView(4096);
+		//this.textBuf = new SlidingStringView(4096);
 	}
 
 
@@ -81,26 +83,12 @@ public final class TextParserImpl implements TextParser, Closeable {
 	}
 
 
+	/* commented out 2016-2-23, due to performance overhead of keeping a SlidingStringView reference in every text buffer
 	@Override
 	public String substring(int startIndex, int endIndex) {
 		return textBuf.substring(startIndex, endIndex);
 	}
-
-
-	/** Get the character offset of the first character in the current line of text.
-	 * This offset is caused by calls to {@link #unread(int)}.
-	 * @return the offset of the current line within the original line.
-	 */
-	// TODO deprecating @Override
-	public int getLineOffset() {
-		return offset;
-	}
-
-
-	// TODO deprecating @Override
-	public int getLineLength() {
-		return curLineChars.length;
-	}
+	*/
 
 
 	// TODO deprecating @Override
@@ -129,7 +117,9 @@ public final class TextParserImpl implements TextParser, Closeable {
 	}
 
 
-	public char[] peekNextLine() {
+	/** Do not edit the returned char[]
+	 */
+	protected char[] peekNextLine() {
 		boolean firstCheck = !started;
 		if(firstCheck) {
 			nextLine();
@@ -206,7 +196,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 			try {
 				((AutoCloseable)in).close();
 			} catch (Exception e) {
-				// Don't catch an error closing the stream
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -648,39 +638,38 @@ public final class TextParserImpl implements TextParser, Closeable {
 	 * @throws IOException if there is an error reading the line from the input stream
 	 * @see #getLineOffset()
 	 */
-	private String nextLine() {
-		String wasCurrentLine = currentLine;
+	private char[] nextLine() {
+		char[] wasCurrentLine = this.curLineChars;
 
-		if(returned) {
-			returned = false;
-			return currentLine;
+		if(this.returned) {
+			this.returned = false;
+			return this.curLineChars;
 		}
 
-		if(!started) {
-			String line = in.hasNext() ? in.next() : null;
+		if(!this.started) {
+			Object line = this.in.hasNext() ? this.in.next() : null;
 			if(line != null) {
-				textBuf.append(line);
+				//this.textBuf.append(line);
 			}
-			currentLine = line;
+			this.curLineChars = line != null ? (this.inReturnsCharArray ? (char[])line : ((String)line).toCharArray()) : null;
 		}
 		else {
-			currentLine = nextLine;
-			if(currentLine != null) {
-				lineNum++;
+			this.curLineChars = this.nextLineChars;
+			if(this.curLineChars != null) {
+				this.lineNum++;
 			}
 		}
 
-		nextLine = in.hasNext() ? in.next() : null;
-		if(nextLine != null) {
-			textBuf.append(nextLine);
+		Object nextLine = this.in.hasNext() ? this.in.next() : null;
+		this.nextLineChars = nextLine != null ? (this.inReturnsCharArray ? (char[])nextLine : ((String)nextLine).toCharArray()) : null;
+		if(this.nextLineChars != null) {
+			//this.textBuf.append(this.nextLineChars);
 		}
 
-		started = true;
-		nextLineChars = nextLine != null ? nextLine.toCharArray() : null;
-		curLineChars = currentLine != null ? currentLine.toCharArray() : null;
-		offset = -1; // adjust offset so nextChar() returns the first char the first time it is called
-		previousLinesOffset += wasCurrentLine != null ? wasCurrentLine.length() : 0;
-		return currentLine;
+		this.started = true;
+		this.offset = -1; // adjust offset so nextChar() returns the first char the first time it is called
+		this.previousLinesOffset += wasCurrentLine != null ? wasCurrentLine.length : 0;
+		return this.curLineChars;
 	}
 
 
@@ -699,6 +688,44 @@ public final class TextParserImpl implements TextParser, Closeable {
 			throw new IllegalArgumentException("character required, " + codePoint + " is not a valid 16-bit character, unicode 32-bit is not supported");
 		}
 		return (char)codePoint;
+	}
+
+
+	/** Create a line buffer with a {@link PeekableIterator} source
+	 * @param reader the peekable iterator to read the lines of text from
+	 */
+	public static TextParserImpl fromStrings(PeekableIterator<String> reader, boolean inReturnsCharArray) {
+		TextParserImpl impl = new TextParserImpl(reader, false);
+		return impl;
+	}
+
+
+	/** Create a line buffer with a {@link PeekableIterator} source
+	 * @param reader the peekable iterator to read the lines of text from
+	 * @param lastLineNum the starting line number of this line buffer
+	 */
+	public static TextParserImpl fromStrings(PeekableIterator<String> reader, int lastLineNum) {
+		TextParserImpl impl = new TextParserImpl(reader, false, lastLineNum);
+		return impl;
+	}
+
+
+	/** Create a line buffer with a {@link PeekableIterator} source
+	 * @param reader the peekable iterator to read the lines of text from
+	 */
+	public static TextParserImpl fromCharArrays(PeekableIterator<char[]> reader, boolean inReturnsCharArray) {
+		TextParserImpl impl = new TextParserImpl(reader, true);
+		return impl;
+	}
+
+
+	/** Create a line buffer with a {@link PeekableIterator} source
+	 * @param reader the peekable iterator to read the lines of text from
+	 * @param lastLineNum the starting line number of this line buffer
+	 */
+	public static TextParserImpl fromCharArrays(PeekableIterator<char[]> reader, int lastLineNum) {
+		TextParserImpl impl = new TextParserImpl(reader, true, lastLineNum);
+		return impl;
 	}
 
 
@@ -726,7 +753,7 @@ public final class TextParserImpl implements TextParser, Closeable {
 		//BufferedReader reader = new BufferedReader(new StringReader(src));
 		Supplier<String> lines = new StringLineSupplier(src, off, len, treatEmptyLineAsLine, treatEolNewlineAsTwoLines, includeNewlinesAtEndOfReturnedLines, collapseNewlinesIntoOneChar);
 		EnhancedIterator<String> lineReader = new EnhancedIterator<>(lines, null);
-		TextParserImpl lineBuffer = new TextParserImpl(lineReader);
+		TextParserImpl lineBuffer = new TextParserImpl(lineReader, false);
 
 		return lineBuffer;
 	}
