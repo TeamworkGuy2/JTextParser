@@ -90,15 +90,4 @@ public interface CharParser extends ParserCondition {
 		return true;
 	}
 
-
-
-
-	/**
-	 * @author TeamworkGuy2
-	 * @since 2015-2-14
-	 */
-	public static interface WithMarks extends CharParser, ParserStartChars {
-	}
-
-
 }

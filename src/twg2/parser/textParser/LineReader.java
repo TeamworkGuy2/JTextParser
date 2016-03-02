@@ -14,12 +14,6 @@ import java.io.PushbackReader;
 public interface LineReader extends Closeable, ParserPos {
 
 	/**
-	 * @return true if the line's offset has not be modified, false if the offset has been modified
-	 */
-	public boolean isUnmodifiedLine();
-
-
-	/**
 	 * @return the parser's current, 0 based, position within the underlying data stream
 	 * NOTE: returns -1 if the parser is not initialized
 	 */
@@ -40,24 +34,6 @@ public interface LineReader extends Closeable, ParserPos {
 	 */
 	@Override
 	public int getColumnNumber();
-
-
-	/**
-	 * @return the current line character offset, 0 based
-	 */
-	//public int getLineOffset();
-
-
-	/**
-	 * @return the length of the current line
-	 */
-	//public int getLineLength();
-
-
-	/**
-	 * @return the number of characters remaining unread in the current line
-	 */
-	//public int getLineRemaining();
 
 
 	/**
@@ -98,10 +74,13 @@ public interface LineReader extends Closeable, ParserPos {
 
 
 	/**
-	 * @param startIndex inclusive
-	 * @param endIndex exclusive
-	 * @return substring from this line reader between the specified indices
+	 * @return true if this line has a previous character, false if not
 	 */
-	//public String substring(int startIndex, int endIndex);
+	public boolean hasPrevChar();
 
+
+	/**
+	 * @return the previous character from this line if available, throws an error if no previous char is available
+	 */
+	public char prevChar();
 }

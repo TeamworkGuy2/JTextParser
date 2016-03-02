@@ -1,8 +1,21 @@
 --------
+####0.8.0
+date: 2016-3-2
+
+commit: ?
+
+Moving toward stream/chunk based parsing
+* Renamed ParserStartChars -> CharParserMatchable, which now extends CharParser (instead of old CharParser.WithMarks interface)
+* Removed LineReader isUnmodifiedLine(), getLineOffset(), getLineLength(), and getLineRemaining()
+* Added LineReader hasPrevChar() and prevChar()
+* Removed TextParser.hasNextLine()
+
+
+--------
 ####0.7.0
 date: 2016-2-23
 
-commit: d15b609afb2d77b293493a6372444e61a7019132
+commit: 391997f99f5c4284732417c5bfe44a6430caa072
 
 * Removed LineReader.substring()
 * Removed TextParserImpl currentLine and nextLine fields

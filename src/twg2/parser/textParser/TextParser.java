@@ -193,11 +193,6 @@ public interface TextParser extends LineReader, Closeable {
 
 	public int nextBetween(char lower, char upper, int count, Appendable dst);
 
-	/**
-	 * @return true if there is another line, false otherwise
-	 */
-	public boolean hasNextLine();
-
 
 	public default String readLine() {
 		StringBuilder strB = new StringBuilder();
