@@ -11,7 +11,7 @@ import twg2.parser.textParser.TextParserImpl;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadUnescape;
 import twg2.parser.textParserUtils.SearchRange;
-import twg2.text.test.StringEscapePartialTest;
+import twg2.text.test.DataUnescapePartialQuoted;
 import checks.CheckTask;
 
 /**
@@ -56,28 +56,43 @@ public class ReadMatchingTest {
 	}
 
 
-
 	@Test
 	public void testReadUnescapePartialQuoted2() {
-		int offset = 3;
-		List<String> inputs = StringEscapePartialTest.UnescapePartialQuoted.inputs;
-		List<String> expect = StringEscapePartialTest.UnescapePartialQuoted.expected;
-		List<Integer> expectIndex = StringEscapePartialTest.UnescapePartialQuoted.expectedIndexes;
+		int offset = DataUnescapePartialQuoted.inputsOffset;
+		List<String> inputs = DataUnescapePartialQuoted.inputs;
+		List<String> expect = DataUnescapePartialQuoted.expected;
+		List<Integer> expectIdxs = DataUnescapePartialQuoted.expectedIndexesIncludingTrueEndingChar;
 		StringBuilder dst = new StringBuilder();
 
 		for(int i = 0, size = inputs.size(); i < size; i++) {
 			StringBuilder strB = new StringBuilder();
 			TextParserImpl in = TextParserImpl.of(inputs.get(i), offset, inputs.get(i).length() - offset);
 
+			// TODO also check the return count from readUnescapePartialQuoted()
 			ReadUnescape.Default.readUnescapePartialQuoted(in, '"', '\\', ',', ']', strB);
 
 			int index = in.getPosition();
 			Assert.assertEquals(expect.get(i), strB.toString());
-			Assert.assertEquals(i + ". expect (" + expectIndex.get(i) + "): " + expect.get(i) + ", result (" + index + "): " + strB.toString(), (int)expectIndex.get(i), index + offset + 1);
+			Assert.assertEquals(i + ". expect (" + expectIdxs.get(i) + "): " + expect.get(i) + ", result (" + index + "): " + strB.toString(), (int)expectIdxs.get(i), index + offset + 1);
 			dst.setLength(0);
 		}
 	}
 
+
+	@Test
+	public void readUnescapePartialFailTests() {
+		int i = 0;
+		for(String errInput : DataUnescapePartialQuoted.inputsNoClosingQuote) {
+			//String expect = DataUnescapePartialQuoted.expectedNoClosingQuote.get(i);
+			CheckTask.assertException("(" + i + ") " + errInput, () -> {
+				StringBuilder strB = new StringBuilder();
+				TextParserImpl in = TextParserImpl.of(errInput, 0, errInput.length());
+
+				ReadUnescape.readUnescapePartialOrFullQuotedThrows(in, '"', '\\', ',', ']', false, (char)0, false, true, true, false, true, false, strB);
+			});
+			i++;
+		}
+	}
 
 
 	@Test

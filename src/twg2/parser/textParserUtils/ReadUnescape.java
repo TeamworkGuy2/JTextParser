@@ -36,34 +36,41 @@ public class ReadUnescape {
 
 
 
+	/** Read a partially quoted string using {@link #readUnescapePartialOrFullQuotedThrows}
+	 */
 	public static final int readUnescapePartialQuoted(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, boolean allowNewline, char newlineChar, Appendable dst) {
 		return readUnescapePartialOrFullQuotedThrows(in, quoteChar, escChar, endChar1, endChar2, allowNewline, newlineChar, false, true, false, false, false, false, dst);
 	}
 
 
+	/** Read a quoted string using {@link #readUnescapePartialOrFullQuotedThrows}, don't throw errors if the string doesn't end properly with a closing quote
+	 */
 	public static final int readUnescapeQuoted(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, boolean allowNewline, char newlineChar, Appendable dst) {
 		return readUnescapePartialOrFullQuotedThrows(in, quoteChar, escChar, endChar1, endChar2, allowNewline, newlineChar, true, true, false, false, false, false, dst);
 	}
 
 
+	/** Read a quoted string using {@link #readUnescapePartialOrFullQuotedThrows}
+	 */
 	public static final int readUnescapeQuotedThrows(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, boolean allowNewline, char newlineChar, Appendable dst) {
 		return readUnescapePartialOrFullQuotedThrows(in, quoteChar, escChar, endChar1, endChar2, allowNewline, newlineChar, true, true, false, true, true, false, dst);
 	}
 
 
-	/** reads 'quoted' strings which can optionally be proceeded by non-quoted characters and ended
+	/** Reads 'quoted' strings, optionally preceded by non-quoted characters and ended
 	 * by one of a few end characters or an ending quote if a beginning quote has been encountered.<br>
+	 * Note: Ending char immediately following are closing quote are ready from {@code in} but not counted in the return number
 	 * Example: {@code key: "value, (stuff)", mk}<br>
 	 * with: quote=" esc=\ end1=, end2=)<br>
 	 * returns: {@code key: "value, (stuff)"}<br>
 	 * Useful for parsing CSV or JSON like quoted strings or combinations of none quoted strings followed by a quoted string.
 	 * @param in the input source
-	 * @param quoteChar the character marking the beginning and end of a quoted sub-section of a string
+	 * @param quoteChar marks the begin and end of a quoted sub-section of a string
 	 * @param escChar a character that if it precedes {@code quoteChar} at some point after an opening {@code quoteChar},
 	 * the 'escaped' {@code quoteChar} is treated as a normal character and not the end of the quoted string
 	 * (only applies to {@code quoteChar}, not {@code endChar1} or {@code endChar2})
-	 * @param endChar1 character that marks the end of a non-quoted character string, is treated as a literal in a quoted string
-	 * @param endChar2 character that marks the end of a non-quoted character string, is treated as a literal in a quoted string
+	 * @param endChar1 marks the end of a non-quoted string, but treated as a literal if found in a quoted string
+	 * @param endChar2 marks the end of a non-quoted string, but treated as a literal if found in a quoted string
 	 * @param allowNewline true to allow newlines in the parsed string, false if not
 	 * @param newlineChar the character that represents newlines
 	 * @param readQuotedOnly true to only read a string if the first character is a quote
@@ -83,7 +90,8 @@ public class ReadUnescape {
 	 * @param dst the destination to append successfully matched and read characters to,
 	 * will include characters between the next character from {@code in} when this
 	 * function was called through (and including) the ending quote or {@code endChar1/endChar2}
-	 * @return the number of characters read
+	 * @return the number of characters read, excluding ending characters (even if one of the end chars is a quote which gets appended to {@code dst}).
+	 * Note: the return value may differ from the number of characters ready from {@code in} by more 1 or MORE characters.
 	 */
 	public static final int readUnescapePartialOrFullQuotedThrows(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, boolean allowNewline, char newlineChar,
 			boolean readQuotedOnly, boolean dropEscChars, boolean appendEndChar, boolean throwIfQuotedNoStartQuote, boolean throwIfNoEndQuote, boolean throwIfNoEndChar, Appendable dst) {
