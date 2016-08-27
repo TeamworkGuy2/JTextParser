@@ -4,7 +4,13 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-###[0.8.1](N/A) - 2016-06-26
+###[0.8.2](N/A) - 2016-08-27
+####Changed
+* Updated to use latest dependencies and dependency paths
+
+
+--------
+###[0.8.1](https://github.com/TeamworkGuy2/JTextParser/commit/8609d66ef57071440baa27d24faced84fe8e781f) - 2016-06-26
 ####Changed
 * Improved ReadUnescape documentation and changed ReadMatchingTest
 * Switched from versions.md to CHANGELOG.md format, see http://keepachangelog.com/

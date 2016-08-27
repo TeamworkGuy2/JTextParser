@@ -7,8 +7,8 @@ import java.util.List;
 import twg2.arrays.ArrayUtil;
 import twg2.functions.Predicates;
 import twg2.parser.textParser.TextParser;
-import twg2.text.stringUtils.StringCompare;
-import twg2.text.stringUtils.StringIndex;
+import twg2.text.stringSearch.StringCompare;
+import twg2.text.stringSearch.StringIndex;
 
 /**
  * @author TeamworkGuy2
