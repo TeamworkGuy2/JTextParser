@@ -1,11 +1,15 @@
 package twg2.parser.test;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParser.TextCharsParser;
+import twg2.parser.textParser.TextIteratorParser;
+import twg2.parser.textParser.TextParser;
+import twg2.parser.textParser.TextParserConditionalsDefault;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadPeek;
 import checks.CheckTask;
@@ -15,6 +19,11 @@ public class TextParserTest {
 
 	@Test
 	public void unescapeTest() {
+		runTests(this::unescapeTest);
+	}
+
+
+	public void unescapeTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
 		String[] inputs = new String[] {
 				"a \\\"block\\\" char '\\\"'",
 				" \\\\abc",
@@ -31,7 +40,7 @@ public class TextParserTest {
 		StringBuilder dst = new StringBuilder();
 
 		for(int i = 0, size = inputs.length; i < size; i++) {
-			ReadMatching.readUnescape(TextParserImpl.of(inputs[i]), '\\', '"', false, '\n', dst);
+			ReadMatching.readUnescape(parserFactory.apply(inputs[i]), '\\', '"', false, '\n', dst);
 			Assert.assertEquals(expect[i], dst.toString());
 			dst.setLength(0);
 		}
@@ -40,6 +49,11 @@ public class TextParserTest {
 
 	@Test
 	public void readMatchingString() {
+		runTests(this::readMatchingString);
+	}
+
+
+	public void readMatchingString(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
 		String[] inputs = new String[] {
 				"Object a",
 				"things and stuff",
@@ -81,7 +95,7 @@ public class TextParserTest {
 		Assert.assertEquals("array length 3", inputs.length, match.length);
 
 		for(int i = 0, size = inputs.length; i < size; i++) {
-			TextParserImpl in = TextParserImpl.of(inputs[i]);
+			TextParser in = parserFactory.apply(inputs[i]);
 			Assert.assertEquals("read matching string (index: " + i + ")", (expect[i].length() > 0), in.nextIf(match[i]));
 			Assert.assertEquals("next char does not match (index: " + i + ")", expectNext[i], (in.hasNext() ? in.nextChar() : 0));
 		}
@@ -90,6 +104,11 @@ public class TextParserTest {
 
 	@Test
 	public void partialEscapedTest() {
+		
+	}
+
+
+	public void partialEscapedTest(Function<String, TextParser> parserFactory) {
 		String[] inputs = new String[] {
 				"stuff \"with quotes\" other",
 				"first, next",
@@ -104,7 +123,7 @@ public class TextParserTest {
 
 		for(int i = 0, size = inputs.length; i < size; i++) {
 			StringBuilder dst = new StringBuilder();
-			TextParserImpl in = TextParserImpl.of(inputs[i]);
+			TextParser in = parserFactory.apply(inputs[i]);
 			in.nextIfNot(',', '"', 0, dst);
 			if(in.nextIf('"')) {
 				dst.append('"');
@@ -118,25 +137,31 @@ public class TextParserTest {
 
 	@Test
 	public void positionTest() {
+		runTests(this::positionTest);
+	}
+
+
+	public void positionTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
 		String str =
 			"\tstring a\n" +
 			"\tstring b\n" +
 			"\n" +
 			"3";
-		TextParserImpl buf = TextParserImpl.of(str);
+		TextParser buf = parserFactory.apply(str);
 
-		Assert.assertTrue(buf.getPosition() == -1);
+		Assert.assertEquals(offset - 1, buf.getPosition());
 		buf.hasNext();
 		char ch = buf.nextChar();
 		Assert.assertEquals(str.charAt(0), ch);
-		Assert.assertEquals(0, buf.getPosition());
+		Assert.assertEquals(offset + 0, buf.getPosition());
 		Assert.assertEquals(1, buf.getLineNumber());
 		Assert.assertEquals(1, buf.getColumnNumber());
 
-		buf.readLine();
+		String line = buf.readLine();
+		Assert.assertEquals("string a", line);
 		ch = buf.nextChar();
 		Assert.assertEquals('\t', ch);
-		Assert.assertEquals(10, buf.getPosition());
+		Assert.assertEquals(offset + 10, buf.getPosition());
 		Assert.assertEquals(2, buf.getLineNumber());
 		Assert.assertEquals(1, buf.getColumnNumber());
 	}
@@ -144,7 +169,12 @@ public class TextParserTest {
 
 	@Test
 	public void readLineTest() {
-		TextParserImpl buf = TextParserImpl.of(
+		runTests(this::readLineTest);
+	}
+
+
+	public void readLineTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
+		TextParser buf = parserFactory.apply(
 			"\tstring a\n" +
 			"\tstring b\n" +
 			"\n" +
@@ -171,8 +201,13 @@ public class TextParserTest {
 
 	@Test
 	public void readLinesTest() {
+		runTests(this::readLinesTest);
+	}
+
+
+	public void readLinesTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
 		{
-			TextParserImpl buf = TextParserImpl.of("\tstring a\n\tstring b\n3");
+			TextIteratorParser buf = TextIteratorParser.of("\tstring a\n\tstring b\n3");
 			String[] expect = {
 					"\tstring a\n",
 					"\tstring b\n",
@@ -191,7 +226,7 @@ public class TextParserTest {
 		}
 
 		{
-			TextParserImpl buf = TextParserImpl.of("\n\n\n");
+			TextParser buf = parserFactory.apply("\n\n\n");
 			String expect = "\n\n\n";
 			StringBuilder strB = new StringBuilder();
 			while(buf.hasNext()) {
@@ -205,7 +240,7 @@ public class TextParserTest {
 
 	@Test
 	public void lineReminaingTest() {
-		TextParserImpl buf = TextParserImpl.of("\tstring a\nabc\n3");
+		TextIteratorParser buf = TextIteratorParser.of("\tstring a\nabc\n3");
 		String[] expect = {
 				"\tstring a\n",
 				"abc\n",
@@ -232,7 +267,38 @@ public class TextParserTest {
 
 
 	@Test
+	public void readNextBetweenTest() {
+		runTests(this::readNextBetweenTest);
+	}
+
+
+	public void readNextBetweenTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
+		TextParserConditionalsDefault buf = parserFactory.apply("123 123");
+		StringBuilder sb = new StringBuilder();
+
+		buf.nextBetween('0', '9', 5, sb);
+		Assert.assertEquals("123", sb.toString());
+		sb.setLength(0);
+
+		buf = parserFactory.apply("a1b2cc3 4d");
+		buf.nextBetween('0', '9', 'a', 'z', 5, sb);
+		Assert.assertEquals("a1b2c", sb.toString());
+		sb.setLength(0);
+
+		buf = parserFactory.apply("a1b2cc3 4d");
+		buf.nextBetween('0', '9', 'a', 'z', 10, sb);
+		Assert.assertEquals("a1b2cc3", sb.toString());
+		sb.setLength(0);
+	}
+
+
+	@Test
 	public void readNextIfNotPrecededByTest() {
+		runTests(this::readNextIfNotPrecededByTest);
+	}
+
+
+	public void readNextIfNotPrecededByTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
 		char endCh = '\'';
 		char escCh = '\\';
 		char stopCh = ',';
@@ -251,7 +317,7 @@ public class TextParserTest {
 			"a"
 		};
 
-		CheckTask.assertTests(inputs, expectNotEscaped, createReadNextIfNotPrecededByTask1(endCh, escCh, stopCh, false));
+		CheckTask.assertTests(inputs, expectNotEscaped, createReadNextIfNotPrecededByTask1(parserFactory, endCh, escCh, stopCh, false));
 
 		String[] expectEscaped = {
 			"a ",
@@ -260,17 +326,26 @@ public class TextParserTest {
 			"a"
 		};
 
-		CheckTask.assertTests(inputs, expectEscaped, createReadNextIfNotPrecededByTask1(endCh, escCh, stopCh, true));
+		CheckTask.assertTests(inputs, expectEscaped, createReadNextIfNotPrecededByTask1(parserFactory, endCh, escCh, stopCh, true));
 	}
 
 
-	private Function<String, String> createReadNextIfNotPrecededByTask1(char endChar, char escChar, char stopChar, boolean dropEscChar) {
+	private Function<String, String> createReadNextIfNotPrecededByTask1(Function<String, TextParserConditionalsDefault> parserFactory, char endChar, char escChar, char stopChar, boolean dropEscChar) {
 		return (str) -> {
-			TextParserImpl buf = TextParserImpl.of(str);
+			TextParser buf = parserFactory.apply(str);
 			StringBuilder strB = new StringBuilder();
 			buf.nextIfNotPrecededBy(endChar, escChar, stopChar, dropEscChar, 0, strB);
 			return strB.toString();
 		};
+	}
+
+
+	// package-private
+	void runTests(BiConsumer<Function<String, TextParserConditionalsDefault>, Integer> testFunc) {
+		testFunc.accept((str) -> TextIteratorParser.of(str), 0);
+		testFunc.accept((str) -> TextCharsParser.of(str), 0);
+		testFunc.accept((str) -> TextIteratorParser.of("~~~" + str, 3, str.length()), 0);
+		testFunc.accept((str) -> TextCharsParser.of(("~~~" + str).toCharArray(), 3, str.length(), true, true, true), 3);
 	}
 
 }

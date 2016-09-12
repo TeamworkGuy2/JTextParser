@@ -1,9 +1,9 @@
-package twg2.parser.test;
+package twg2.parser.textParserUtils.test;
 
 import org.junit.Test;
 
 import twg2.parser.textParser.TextParser;
-import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParser.TextIteratorParser;
 import twg2.ranges.helpers.CharCategory;
 import checks.Check;
 
@@ -43,7 +43,7 @@ public class ReadCharCategoryTest {
 
 		StringBuilder dst = new StringBuilder();
 		for(int i = 0, size = strs.length; i < size; i++) {
-			TextParser tool = TextParserImpl.of(strs[i]);
+			TextParser tool = TextIteratorParser.of(strs[i]);
 			tool.nextIf(types[i], dst);
 
 			Check.assertEqual(dst.toString(), expect[i], "");

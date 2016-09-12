@@ -61,6 +61,13 @@ public interface TextFragmentRef {
 	 * @param allText a character sequence containing all of the text from index 0.
 	 * @return the text referenced by this text fragment
 	 */
+	public CharSequence getText(char[] allText, int offset, int length);
+
+	/** Behaves as if calling:<br>
+	 * {@code allText.}{@link CharSequence#subSequence(int, int) subSequence}{@code (this.}{@link #getOffsetStart() getOffsetStart()}{@code , this.}{@link #getOffsetEnd() getOffsetEnd()}{@code )}
+	 * @param allText a character sequence containing all of the text from index 0.
+	 * @return the text referenced by this text fragment
+	 */
 	public CharSequence getText(CharSequence allText);
 
 	public CharSequence getText(List<? extends CharSequence> textLines);
@@ -210,6 +217,14 @@ public interface TextFragmentRef {
 
 
 		@Override
+		public CharSequence getText(char[] chars, int offset, int length) {
+			if(offsetStart < offset) { throw new IndexOutOfBoundsException("offset " + offsetStart + ", expected " + offset + " or greater"); }
+			if(offsetEnd > offset + length) { throw new IndexOutOfBoundsException("end offset " + offsetEnd + ", expected " + (offset + length) + " or less"); }
+			return new String(chars, offsetStart, offsetEnd - offsetStart);
+		}
+
+
+		@Override
 		public CharSequence getText(CharSequence chseq) {
 			return chseq.subSequence(offsetStart, offsetEnd);
 		}
@@ -292,6 +307,14 @@ public interface TextFragmentRef {
 		public ImplMut copy() {
 			ImplMut copy = new ImplMut(offsetStart, offsetEnd, lineStart, columnStart, lineEnd, columnEnd);
 			return copy;
+		}
+
+
+		@Override
+		public CharSequence getText(char[] chars, int offset, int length) {
+			if(offsetStart < offset) { throw new IndexOutOfBoundsException("offset " + offsetStart + ", expected " + offset + " or greater"); }
+			if(offsetEnd > offset + length) { throw new IndexOutOfBoundsException("end offset " + offsetEnd + ", expected " + (offset + length) + " or less"); }
+			return new String(chars, offsetStart, offsetEnd - offsetStart);
 		}
 
 

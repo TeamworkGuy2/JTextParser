@@ -1,4 +1,4 @@
-package twg2.parser.test;
+package twg2.parser.textParserUtils.test;
 
 import java.util.ArrayList;
 import java.util.List;

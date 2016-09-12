@@ -60,21 +60,21 @@ public class LineSupplier {
 
 	protected final Object readCharsOrString(boolean returnCharArray) {
 		String str = src;
-		int offI = off;
+		int i = off;
 		int maxI = max;
 		StringBuilder buf = tmpBuf;
 		buf.setLength(0);
 
-		if(offI >= maxI) {
+		if(i >= maxI) {
 			// handle empty lines
-			if(this.treatEmptyLineAsLine && offI == 0 && maxI == 0) {
+			if(this.treatEmptyLineAsLine && i == 0 && maxI == 0) {
 				this.off = maxI + 1;
 				return returnCharArray ? EMPTY_CHAR_ARRAY : "";
 			}
 			// handle lines ending with "...\n", such a string would be considered 2 lines
-			if(this.treatEolNewlineAsTwoLines && maxI > 0 && offI == maxI) {
+			if(this.treatEolNewlineAsTwoLines && maxI > 0 && i == maxI) {
 				this.off = maxI + 1;
-				char ch = str.charAt(offI - 1);
+				char ch = str.charAt(i - 1);
 				if(ch == '\n' || ch == '\r') {
 					return returnCharArray ? EMPTY_CHAR_ARRAY : "";
 				}
@@ -83,11 +83,11 @@ public class LineSupplier {
 			return null;
 		}
 
-		for(; offI < maxI; offI++) {
-			char ch = str.charAt(offI);
+		for(; i < maxI; i++) {
+			char ch = str.charAt(i);
 			if(ch == '\n' || ch == '\r') {
-				if(ch == '\r' && offI + 1 < maxI && str.charAt(offI + 1) == '\n') {
-					offI++;
+				if(ch == '\r' && i + 1 < maxI && str.charAt(i + 1) == '\n') {
+					i++;
 					// additionally, include newline chars at end of each line if requested
 					if(includeNewlinesAtEndOfReturnedLines) {
 						if(collapseNewlinesIntoOneChar) {
@@ -105,13 +105,13 @@ public class LineSupplier {
 						buf.append('\n');
 					}
 				}
-				offI++;
+				i++;
 				break;
 			}
 			buf.append(ch);
 		}
 
-		this.off = offI;
+		this.off = i;
 
 		if(returnCharArray) {
 			int bufLen = buf.length();

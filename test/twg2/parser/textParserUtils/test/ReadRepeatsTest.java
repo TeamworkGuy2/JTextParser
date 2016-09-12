@@ -1,4 +1,4 @@
-package twg2.parser.test;
+package twg2.parser.textParserUtils.test;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 JTextParser
 ==============
-version: 0.8.2
+version: 0.9.0
 
 Contains 4 major packages:
 * twg2.parser - a set of interfaces and implementation for reading a stream of input text lines using conditional methods like nextIf() and nextIfNot()

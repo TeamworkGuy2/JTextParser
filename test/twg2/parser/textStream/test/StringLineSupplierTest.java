@@ -1,4 +1,4 @@
-package twg2.parser.test;
+package twg2.parser.textStream.test;
 
 import org.junit.Test;
 

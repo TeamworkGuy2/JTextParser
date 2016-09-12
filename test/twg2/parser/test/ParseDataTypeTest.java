@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.function.BiFunction;
 
 import twg2.parser.textParser.TextParser;
-import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParser.TextIteratorParser;
 
 /**
  * @author TeamworkGuy2
@@ -24,7 +24,7 @@ public class ParseDataTypeTest {
 		for(int i = 0, size = strs.length; i < size; i++) {
 			strB.setLength(0);
 			@SuppressWarnings("unused")
-			Object obj = parser.apply(TextParserImpl.of(strs[i]), strB);
+			Object obj = parser.apply(TextIteratorParser.of(strs[i]), strB);
 			check(strs[i], strB.toString(), expd[i], "int");
 			//System.out.println("type '" + strs[i] + "': " + obj);
 		}
@@ -42,7 +42,7 @@ public class ParseDataTypeTest {
 		for(int i = 0, size = strs.length; i < size; i++) {
 			strB.setLength(0);
 			@SuppressWarnings("unused")
-			Object obj = parser.apply(TextParserImpl.of(strs[i]), strB);
+			Object obj = parser.apply(TextIteratorParser.of(strs[i]), strB);
 			check(strs[i], strB.toString(), expd[i], "float");
 			//System.out.println("type '" + strs[i] + "': " + obj);
 		}

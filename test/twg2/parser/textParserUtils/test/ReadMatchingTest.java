@@ -1,4 +1,4 @@
-package twg2.parser.test;
+package twg2.parser.textParserUtils.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParser.TextIteratorParser;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadUnescape;
 import twg2.parser.textParserUtils.SearchRange;
@@ -45,7 +45,7 @@ public class ReadMatchingTest {
 
 		CheckTask.assertTests(inputs, expected, (String str) -> {
 			StringBuilder strB = new StringBuilder();
-			TextParserImpl in = TextParserImpl.of(str);
+			TextIteratorParser in = TextIteratorParser.of(str);
 
 			ReadUnescape.readUnescapePartialQuoted(in, '"', '\\', ',', ')', true, '\n', strB);
 			String res = strB.toString();
@@ -66,7 +66,7 @@ public class ReadMatchingTest {
 
 		for(int i = 0, size = inputs.size(); i < size; i++) {
 			StringBuilder strB = new StringBuilder();
-			TextParserImpl in = TextParserImpl.of(inputs.get(i), offset, inputs.get(i).length() - offset);
+			TextIteratorParser in = TextIteratorParser.of(inputs.get(i), offset, inputs.get(i).length() - offset);
 
 			// TODO also check the return count from readUnescapePartialQuoted()
 			ReadUnescape.Default.readUnescapePartialQuoted(in, '"', '\\', ',', ']', strB);
@@ -86,7 +86,7 @@ public class ReadMatchingTest {
 			//String expect = DataUnescapePartialQuoted.expectedNoClosingQuote.get(i);
 			CheckTask.assertException("(" + i + ") " + errInput, () -> {
 				StringBuilder strB = new StringBuilder();
-				TextParserImpl in = TextParserImpl.of(errInput, 0, errInput.length());
+				TextIteratorParser in = TextIteratorParser.of(errInput, 0, errInput.length());
 
 				ReadUnescape.readUnescapePartialOrFullQuotedThrows(in, '"', '\\', ',', ']', false, (char)0, false, true, true, false, true, false, strB);
 			});
@@ -143,7 +143,7 @@ public class ReadMatchingTest {
 
 		CheckTask.assertTests(inputs, expected, (String str) -> {
 			StringBuilder sb = new StringBuilder();
-			TextParserImpl in = TextParserImpl.of(str);
+			TextIteratorParser in = TextIteratorParser.of(str);
 			List<String> parsedElems = new ArrayList<>();
 
 			while(in.hasNext()) {
@@ -240,7 +240,7 @@ public class ReadMatchingTest {
 		StringBuilder strB = new StringBuilder();
 
 		Runnable task = () -> {
-			TextParserImpl in = TextParserImpl.of(str);
+			TextIteratorParser in = TextIteratorParser.of(str);
 			ReadUnescape.readUnescapePartialOrFullQuotedThrows(in, '"', '\\', ',', ')', allowNewline, '\n', quotedOnly, dropEscChars, appendEndChar, throwIfQuotedNoStartQuote, throwIfNoEndQuote, throwIfNoEndChar, strB);
 		};
 

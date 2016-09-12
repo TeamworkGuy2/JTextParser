@@ -1,10 +1,10 @@
-package twg2.parser.test;
+package twg2.parser.textParserUtils.test;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import twg2.parser.textParser.TextParser;
-import twg2.parser.textParser.TextParserImpl;
+import twg2.parser.textParser.TextIteratorParser;
 import twg2.parser.textParserUtils.ReadWhitespace;
 
 /**
@@ -41,10 +41,10 @@ public class ReadWhitespaceTest {
 	@Test
 	public void readWhitespaceLineBufferTest() {
 		TextParser[] inputs = {
-				TextParserImpl.of("\t\t\t\t,"),
-				TextParserImpl.of(" \n   ="),
-				TextParserImpl.of("\n"),
-				TextParserImpl.of("A")
+				TextIteratorParser.of("\t\t\t\t,"),
+				TextIteratorParser.of(" \n   ="),
+				TextIteratorParser.of("\n"),
+				TextIteratorParser.of("A")
 		};
 		int[] expect = {
 				4,
