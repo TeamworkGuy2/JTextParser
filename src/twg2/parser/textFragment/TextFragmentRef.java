@@ -4,13 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.val;
-import twg2.parser.textParser.ParserPos;
-
 /**
  * @author TeamworkGuy2
  * @since 2015-3-7
@@ -136,19 +129,19 @@ public interface TextFragmentRef {
 	}
 
 
-	static TextFragmentRef.Impl copy(TextFragmentRef src) {
-		TextFragmentRef.Impl copy = new TextFragmentRef.Impl(src.getOffsetStart(), src.getOffsetEnd(), src.getLineStart(), src.getColumnStart(), src.getLineEnd(), src.getColumnEnd());
+	static TextFragmentRefImpl copy(TextFragmentRef src) {
+		TextFragmentRefImpl copy = new TextFragmentRefImpl(src.getOffsetStart(), src.getOffsetEnd(), src.getLineStart(), src.getColumnStart(), src.getLineEnd(), src.getColumnEnd());
 		return copy;
 	}
 
 
-	static TextFragmentRef.ImplMut copyMutable(TextFragmentRef src) {
-		TextFragmentRef.ImplMut copy = new TextFragmentRef.ImplMut(src.getOffsetStart(), src.getOffsetEnd(), src.getLineStart(), src.getColumnStart(), src.getLineEnd(), src.getColumnEnd());
+	static TextFragmentRefImplMut copyMutable(TextFragmentRef src) {
+		TextFragmentRefImplMut copy = new TextFragmentRefImplMut(src.getOffsetStart(), src.getOffsetEnd(), src.getLineStart(), src.getColumnStart(), src.getLineEnd(), src.getColumnEnd());
 		return copy;
 	}
 
 
-	static TextFragmentRef.ImplMut merge(TextFragmentRef.ImplMut dst, TextFragmentRef... fragments) {
+	static TextFragmentRefImplMut merge(TextFragmentRefImplMut dst, TextFragmentRef... fragments) {
 		// sort the fragments by start offset
 		Arrays.sort(fragments, (a, b) -> a.getOffsetStart() - b.getOffsetStart());
 
@@ -173,8 +166,8 @@ public interface TextFragmentRef {
 	}
 
 
-	static TextFragmentRef.ImplMut _merge(TextFragmentRef[] mutableSortedFragments, TextFragmentRef.ImplMut dstOpt) {
-		TextFragmentRef.ImplMut res = dstOpt != null ? dstOpt : copyMutable(mutableSortedFragments[0]);
+	static TextFragmentRefImplMut _merge(TextFragmentRef[] mutableSortedFragments, TextFragmentRefImplMut dstOpt) {
+		TextFragmentRefImplMut res = dstOpt != null ? dstOpt : copyMutable(mutableSortedFragments[0]);
 		int resOffsetEnd = res.offsetEnd;
 		int resLineEnd = 0;
 		int resColumnEnd = 0;
@@ -194,181 +187,6 @@ public interface TextFragmentRef {
 		res.lineEnd = resLineEnd;
 		res.columnEnd = resColumnEnd;
 		return res;
-	}
-
-
-
-
-	@AllArgsConstructor
-	public static class Impl implements TextFragmentRef {
-		private final @Getter int offsetStart;
-		private final @Getter int offsetEnd;
-		private final @Getter int lineStart;
-		private final @Getter int columnStart;
-		private final @Getter int lineEnd;
-		private final @Getter int columnEnd;
-
-
-		@Override
-		public Impl copy() {
-			Impl copy = new Impl(offsetStart, offsetEnd, lineStart, columnStart, lineEnd, columnEnd);
-			return copy;
-		}
-
-
-		@Override
-		public CharSequence getText(char[] chars, int offset, int length) {
-			if(offsetStart < offset) { throw new IndexOutOfBoundsException("offset " + offsetStart + ", expected " + offset + " or greater"); }
-			if(offsetEnd > offset + length) { throw new IndexOutOfBoundsException("end offset " + offsetEnd + ", expected " + (offset + length) + " or less"); }
-			return new String(chars, offsetStart, offsetEnd - offsetStart);
-		}
-
-
-		@Override
-		public CharSequence getText(CharSequence chseq) {
-			return chseq.subSequence(offsetStart, offsetEnd);
-		}
-
-
-		@Override
-		public CharSequence getText(List<? extends CharSequence> lines) {
-			val res = TextFragmentRef.getText(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, lines);
-			return res;
-		}
-
-
-		@Override
-		public String toString(CharSequence chseq) {
-			return TextFragmentRef._toString(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, chseq);
-		}
-
-
-		@Override
-		public String toString() {
-			return TextFragmentRef._toString(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd);
-		}
-
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + columnEnd;
-			result = prime * result + columnStart;
-			result = prime * result + lineEnd;
-			result = prime * result + lineStart;
-			result = prime * result + offsetEnd;
-			result = prime * result + offsetStart;
-			return result;
-		}
-
-
-		@Override
-		public boolean equals(Object obj) {
-			if(!(obj instanceof TextFragmentRef)) { return false; }
-			val frag = (TextFragmentRef)obj;
-			return this.offsetStart == frag.getOffsetStart() &&
-				this.offsetEnd == frag.getOffsetEnd() &&
-				this.columnStart == frag.getColumnStart() &&
-				this.columnEnd == frag.getColumnEnd() &&
-				this.lineStart == frag.getLineStart() &&
-				this.lineEnd == frag.getLineEnd();
-		}
-
-	}
-
-
-	@AllArgsConstructor
-	@NoArgsConstructor
-	public static class ImplMut implements TextFragmentRef {
-		private @Getter @Setter int offsetStart;
-		private @Getter @Setter int offsetEnd;
-		private @Getter @Setter int lineStart;
-		private @Getter @Setter int columnStart;
-		private @Getter @Setter int lineEnd;
-		private @Getter @Setter int columnEnd;
-
-
-		public void setStart(ParserPos pos) {
-			this.offsetStart = pos.getPosition();
-			this.lineStart = pos.getLineNumber() - 1;
-			this.columnStart = pos.getColumnNumber() - 1; 
-		}
-
-
-		public void setEnd(ParserPos pos) {
-			this.offsetEnd = pos.getPosition() + 1;
-			this.lineEnd = pos.getLineNumber() - 1;
-			this.columnEnd = pos.getColumnNumber() - 1;
-		}
-
-
-		@Override
-		public ImplMut copy() {
-			ImplMut copy = new ImplMut(offsetStart, offsetEnd, lineStart, columnStart, lineEnd, columnEnd);
-			return copy;
-		}
-
-
-		@Override
-		public CharSequence getText(char[] chars, int offset, int length) {
-			if(offsetStart < offset) { throw new IndexOutOfBoundsException("offset " + offsetStart + ", expected " + offset + " or greater"); }
-			if(offsetEnd > offset + length) { throw new IndexOutOfBoundsException("end offset " + offsetEnd + ", expected " + (offset + length) + " or less"); }
-			return new String(chars, offsetStart, offsetEnd - offsetStart);
-		}
-
-
-		@Override
-		public CharSequence getText(CharSequence chseq) {
-			return chseq.subSequence(offsetStart, offsetEnd);
-		}
-
-
-		@Override
-		public CharSequence getText(List<? extends CharSequence> lines) {
-			val res = TextFragmentRef.getText(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, lines);
-			return res;
-		}
-
-
-		@Override
-		public String toString(CharSequence chseq) {
-			return TextFragmentRef._toString(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, chseq);
-		}
-
-
-		@Override
-		public String toString() {
-			return TextFragmentRef._toString(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd);
-		}
-
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + columnEnd;
-			result = prime * result + columnStart;
-			result = prime * result + lineEnd;
-			result = prime * result + lineStart;
-			result = prime * result + offsetEnd;
-			result = prime * result + offsetStart;
-			return result;
-		}
-
-
-		@Override
-		public boolean equals(Object obj) {
-			if(!(obj instanceof TextFragmentRef)) { return false; }
-			val frag = (TextFragmentRef)obj;
-			return this.offsetStart == frag.getOffsetStart() &&
-				this.offsetEnd == frag.getOffsetEnd() &&
-				this.columnStart == frag.getColumnStart() &&
-				this.columnEnd == frag.getColumnEnd() &&
-				this.lineStart == frag.getLineStart() &&
-				this.lineEnd == frag.getLineEnd();
-		}
-
 	}
 
 }

@@ -4,7 +4,17 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-###[0.9.0](N/A) - 2016-09-11
+###[0.10.0](N/A) - 2016-10-29
+#### Added
+* twg2.parser.Inclusion - enum { INCLUSION, EXCLUSION } moved from JParserCode
+
+#### Changed
+* Move TextFragmentRef Impl and ImplMut sub-classes into separate TextFragmentRefImpl and TextFragmentRefImplMut source files
+* Updated jarray-util dependency to jarrays
+
+
+--------
+###[0.9.0](https://github.com/TeamworkGuy2/JTextParser/commit/31345bf6e53f3ab419a0cde0dc99d67277239fa7) - 2016-09-11
 #### Added
 * twg2.parser.textParser.TextCharsParser - a fully char[] based TextParser implementation, hopefully with better performance than TextIteratorParser
 * twg2.parser.textStream.LineCounter - a stateful function that accepts characters and returns line numbers as '\n' characters are encountered and keeps track of a list of offsets where each newline starts
