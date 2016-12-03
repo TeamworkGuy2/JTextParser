@@ -1,6 +1,6 @@
 JTextParser
 ==============
-version: 0.10.0
+version: 0.11.0
 
 Contains 4 major packages:
 * twg2.parser - interfaces, constants, and enums for the other packages

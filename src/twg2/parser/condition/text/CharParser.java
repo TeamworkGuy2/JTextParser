@@ -24,7 +24,7 @@ public interface CharParser extends ParserCondition {
 	/**
 	 * @return the {@link TextParser} coordinates span from the first matching character to the last matching character
 	 */
-	public TextFragmentRef getCompleteMatchedTextCoords();
+	public TextFragmentRef getMatchedTextCoords();
 
 
 	/**

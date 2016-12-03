@@ -1,7 +1,6 @@
 package twg2.parser.textFragment;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -115,6 +114,16 @@ public interface TextFragmentRef {
 	}
 
 
+	public static String toStartPositionDisplayText(TextFragmentRef textFrag) {
+		return (textFrag.getLineStart() + 1) + ":" + (textFrag.getColumnStart() + 1);
+	}
+
+
+	public static String toEndPositionDisplayText(TextFragmentRef textFrag) {
+		return (textFrag.getLineEnd() + 1) + ":" + (textFrag.getColumnEnd() + 1);
+	}
+
+
 	static String _toString(int offsetStart, int offsetEnd, int lineStart, int lineEnd, int columnStart, int columnEnd, CharSequence chseq) {
 		return "TextFragmentRef: { off: " + offsetStart + ", len: " + (offsetEnd - offsetStart) +
 				", start: [" + lineStart + ":" + columnStart + "], end: [" + lineEnd + ":" + columnEnd + "], " +
@@ -141,6 +150,22 @@ public interface TextFragmentRef {
 	}
 
 
+	/** Create/modify the 'dst' fragment to span from the start to the end fragment.
+	 * Differs from {@link #merge(TextFragmentRefImplMut, TextFragmentRef...) merge(...)} by creating a span regardless of whether {@code start} and {@code end} are ajacent/overlapping or not
+	 */
+	public static TextFragmentRefImplMut span(TextFragmentRefImplMut start, TextFragmentRef end, TextFragmentRefImplMut dst) {
+		TextFragmentRefImplMut res = dst != null ? dst : copyMutable(start);
+		res.columnEnd = end.getColumnEnd();
+		res.lineEnd = end.getLineEnd();
+		res.offsetEnd = end.getOffsetEnd();
+		return res;
+	}
+
+
+	/** Loop through the fragments in iteration order and create a fragment which starts at the first fragment's start offset/line/column and
+	 * ends at the offset/line/column of the last fragment which is adjacent-to/overlapping-with the fragment before it.<br>
+	 * i.e. once a fragment is reached which is not adjacent-to/overlapping-with the previous fragment, the merge ends.
+	 */
 	static TextFragmentRefImplMut merge(TextFragmentRefImplMut dst, TextFragmentRef... fragments) {
 		// sort the fragments by start offset
 		Arrays.sort(fragments, (a, b) -> a.getOffsetStart() - b.getOffsetStart());
@@ -149,6 +174,10 @@ public interface TextFragmentRef {
 	}
 
 
+	/** Loop through the fragments and create a fragment which starts at the first fragment's start offset/line/column and
+	 * ends at the offset/line/column of the last fragment which is adjacent-to/overlapping-with the fragment before it.<br>
+	 * i.e. once a fragment is reached which is not adjacent-to/overlapping-with the previous fragment, the merge ends.
+	 */
 	static TextFragmentRef merge(TextFragmentRef... fragments) {
 		// sort the fragments by start offset
 		Arrays.sort(fragments, (a, b) -> a.getOffsetStart() - b.getOffsetStart());
@@ -157,15 +186,10 @@ public interface TextFragmentRef {
 	}
 
 
-	static TextFragmentRef merge(Collection<? extends TextFragmentRef> fragments) {
-		// sort the fragments by start offset
-		TextFragmentRef[] fragmentsAry = fragments.toArray(new TextFragmentRef[fragments.size()]);
-		Arrays.sort(fragmentsAry, (a, b) -> a.getOffsetStart() - b.getOffsetStart());
-
-		return _merge(fragmentsAry, null);
-	}
-
-
+	/** Loop through the fragments and create a fragment which starts at the first fragment's start offset/line/column and
+	 * ends at the offset/line/column of the last fragment which is adjacent-to/overlapping-with the fragment before it.<br>
+	 * i.e. once a fragment is reached which is not adjacent-to/overlapping-with the previous fragment, the merge ends.
+	 */
 	static TextFragmentRefImplMut _merge(TextFragmentRef[] mutableSortedFragments, TextFragmentRefImplMut dstOpt) {
 		TextFragmentRefImplMut res = dstOpt != null ? dstOpt : copyMutable(mutableSortedFragments[0]);
 		int resOffsetEnd = res.offsetEnd;

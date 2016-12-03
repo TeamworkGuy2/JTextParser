@@ -4,7 +4,17 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-###[0.10.0](N/A) - 2016-10-29
+###[0.11.0](N/A) - 2016-12-02
+#### Added
+* TextFragmentRef.span(), similar to merge() but fragments don't need to be adjacent/overlapping
+* TextFragmentRef toStartPositionDisplayText() and toEndPositionDisplayText();
+
+#### Changed
+* Renamed CharParser getCompletedMatchedTextCoords() -> getMatchedTextCoords()
+
+
+--------
+###[0.10.0](https://github.com/TeamworkGuy2/JTextParser/commit/4bb5366437e458c1edb6b1234fdfe8694c025a9f) - 2016-10-29
 #### Added
 * twg2.parser.Inclusion - enum { INCLUSION, EXCLUSION } moved from JParserCode
 
