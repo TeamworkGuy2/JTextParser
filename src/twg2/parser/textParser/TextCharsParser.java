@@ -25,7 +25,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 	private int curPos;
 	private int curLineNum;
 	private int nextLineOffsetIfRewinded = -1;
-	private LineCounter lines;
+	private LineCounter lineCtr;
 
 
 	/** Create a line buffer with a {@link PeekableIterator} source
@@ -47,12 +47,12 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 		this.maxReadPos = offset - 1;
 		this.curPos = offset - 1;
 		this.curLineNum = 0;
-		this.lines = new LineCounter(offset);
+		this.lineCtr = new LineCounter(offset);
 	}
 
 
 	public LineCounter getLineNumbers() {
-		return this.lines;
+		return this.lineCtr;
 	}
 
 
@@ -70,7 +70,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 	@Override
 	public int getColumnNumber() {
-		return this.curPos - this.lines.getLineOffset(this.curLineNum) + 1;
+		return this.curPos - this.lineCtr.getLineOffset(this.curLineNum) + 1;
 	}
 
 
@@ -95,7 +95,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 		this.curPos++;
 		char prevCh = this.input[this.curPos];
 		this.curPos++;
-		this.curLineNum = this.lines.getLineNumber(this.curPos);
+		this.curLineNum = this.lineCtr.getLineNumber(this.curPos);
 		return prevCh;
 	}
 
@@ -147,7 +147,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 			throw new IndexOutOfBoundsException(createUnreadErrorMsg(count));
 		}
 		this.curPos -= count;
-		this.curLineNum = this.lines.getLineNumber(this.curPos);
+		this.curLineNum = this.lineCtr.getLineNumber(this.curPos);
 		this.nextLineOffsetIfRewinded = getNextLineOffsetIfRewinded();
 	}
 
@@ -166,12 +166,12 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 		// only adjust max position and line number when we're reading into new chars (i.e. unread() leftovers being re-read)
 		if(this.curPos > this.maxReadPos) {
 			this.maxReadPos = this.curPos;
-			this.curLineNum = this.lines.apply(ch);
+			this.curLineNum = this.lineCtr.read(ch);
 		}
 		else {
 			// if we're re-reading after an unread()
 			if(this.nextLineOffsetIfRewinded > -1 && this.curPos >= this.nextLineOffsetIfRewinded) {
-				this.curLineNum = this.lines.getLineNumber(this.curPos);
+				this.curLineNum = this.lineCtr.getLineNumber(this.curPos);
 				this.nextLineOffsetIfRewinded = getNextLineOffsetIfRewinded();
 			}
 		}
@@ -215,7 +215,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 
 	private final int getNextLineOffsetIfRewinded() {
-		int offset = this.lines.size() > this.curLineNum + 1 ? this.lines.getLineOffset(this.curLineNum + 1) : -1;
+		int offset = this.lineCtr.size() > this.curLineNum + 1 ? this.lineCtr.getLineOffset(this.curLineNum + 1) : -1;
 		return offset;
 	}
 

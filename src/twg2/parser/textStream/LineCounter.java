@@ -3,16 +3,15 @@ package twg2.parser.textStream;
 import java.util.Collection;
 
 import twg2.collections.primitiveCollections.IntListSorted;
-import twg2.functions.Functions;
 
 /** A line counter which accepts characters and keeps a running list of line numbers.<br>
  * Lines start at the index of the first character after a '\n'.
  * Offsets and line numbers are all 0-based indices.
- * This class is stateful and new line numbers are added as additional characters are feed to {@link #apply(char)}.
+ * This class is stateful and new line numbers are added as additional characters are feed to {@link #read(char)}.
  * @author TeamworkGuy2
  * @since 2016-09-10
  */
-public class LineCounter implements Functions.CharReturnInt {
+public class LineCounter {
 	private IntListSorted lineStartOffsets;
 	private int off;
 	private int curLineNum;
@@ -42,8 +41,7 @@ public class LineCounter implements Functions.CharReturnInt {
 	/** Checks if (based on previous chars) this is a newline
 	 * @return the current line number (0-based)
 	 */
-	@Override
-	public int apply(char ch) {
+	public int read(char ch) {
 		if(prevChar == '\n') {
 			lineStartOffsets.add(off);
 			curLineNum++;
@@ -83,7 +81,7 @@ public class LineCounter implements Functions.CharReturnInt {
 
 
 	/** Indicates that input is complete and if the last char was a line ending, count it, and return the line numbers
-	 * @return this line counter's internal list of line number offsets based on the chars passed to {@link #apply(char)} and the initial constructor offset.
+	 * @return this line counter's internal list of line number offsets based on the chars passed to {@link #read(char)} and the initial constructor offset.
 	 * NOTE: should not modify this list, if you'd like a copy, call {@link IntListSorted#copy()} on the return value
 	 */
 	public IntListSorted getRawCompletedLineOffsets() {

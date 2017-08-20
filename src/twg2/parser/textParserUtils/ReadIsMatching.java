@@ -1,6 +1,6 @@
 package twg2.parser.textParserUtils;
 
-import twg2.functions.Predicates;
+import twg2.functions.predicates.CharPredicate;
 import twg2.parser.textParser.TextParser;
 import twg2.ranges.helpers.CharCategory;
 
@@ -98,7 +98,7 @@ public class ReadIsMatching {
 	 * read as many matching characters as possible
 	 * @return the number of characters read
 	 */
-	public static boolean isNext(TextParser in, Predicates.Char condition, int count) {
+	public static boolean isNext(TextParser in, CharPredicate condition, int count) {
 		int foundCount = in.nextIf(condition, count, null);
 		in.unread(foundCount);
 		return foundCount == count;

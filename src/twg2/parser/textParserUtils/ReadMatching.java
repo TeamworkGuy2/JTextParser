@@ -5,7 +5,7 @@ import java.io.UncheckedIOException;
 import java.util.List;
 
 import twg2.arrays.ArrayUtil;
-import twg2.functions.Predicates;
+import twg2.functions.predicates.CharPredicate;
 import twg2.parser.textParser.TextParser;
 import twg2.text.stringSearch.StringCompare;
 import twg2.text.stringSearch.StringIndex;
@@ -102,7 +102,7 @@ public class ReadMatching {
 		 * @return the number of matching characters read
 		 * @throws UncheckedIOException if there is an error reading from the input stream
 		 */
-		public static final int read(char[] str, int strOffset, Predicates.Char check, int max, final Appendable dst) {
+		public static final int read(char[] str, int strOffset, CharPredicate check, int max, final Appendable dst) {
 			if(strOffset >= str.length) {
 				return 0;
 			}
@@ -141,7 +141,7 @@ public class ReadMatching {
 		 * @return the number of matching characters read
 		 * @throws UncheckedIOException if there is an error reading from the input stream
 		 */
-		public static final int checkIf(final char[] str, final int strOffset, Predicates.Char check, final int max) {
+		public static final int checkIf(final char[] str, final int strOffset, CharPredicate check, final int max) {
 			if(strOffset >= str.length) {
 				return 0;
 			}

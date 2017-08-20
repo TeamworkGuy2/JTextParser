@@ -1,6 +1,6 @@
 package twg2.parser.textParser;
 
-import twg2.functions.Predicates;
+import twg2.functions.predicates.CharPredicate;
 import twg2.ranges.helpers.CharCategory;
 
 
@@ -112,7 +112,7 @@ public interface TextParserConditionals {
 	 * @param dst the destination to store the parsed text in
 	 * @return the number of characters read
 	 */
-	public int nextIf(Predicates.Char condition, int count, Appendable dst);
+	public int nextIf(CharPredicate condition, int count, Appendable dst);
 
 
 	/** Read as many characters as do not match, up to {@code count}, from the current line

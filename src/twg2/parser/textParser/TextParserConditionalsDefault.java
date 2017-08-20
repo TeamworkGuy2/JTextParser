@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 
 import twg2.arrays.ArrayUtil;
-import twg2.functions.Predicates;
+import twg2.functions.predicates.CharPredicate;
 import twg2.ranges.CharSearcher;
 import twg2.ranges.helpers.CharCategory;
 
@@ -149,7 +149,7 @@ public interface TextParserConditionalsDefault extends TextParser, TextParserCon
 
 
 	@Override
-	public default int nextIf(Predicates.Char condition, int count, Appendable dst) {
+	public default int nextIf(CharPredicate condition, int count, Appendable dst) {
 		try {
 			count = (count == 0 ? Integer.MAX_VALUE : count);
 			int i = 0;

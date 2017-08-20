@@ -39,7 +39,7 @@ public class LineCounterTest {
 		int prevLine = -1;
 		// pass each char to the line counter and check that the line number of that character matches the expected ones from the known correct list
 		for(int i = off; i < chs.length; i++) {
-			int line = lc.apply(chs[i]);
+			int line = lc.read(chs[i]);
 
 			if(line != prevLine) {
 				int lnNum = lnStarts.binarySearch(i) + 1;
