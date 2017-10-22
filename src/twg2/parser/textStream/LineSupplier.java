@@ -22,7 +22,7 @@ public class LineSupplier {
 	private StringBuilder tmpBuf = new StringBuilder(64);
 	private int off;
 	private int max;
-	private boolean treatEmptyLineAsLine;
+	private boolean includeEmptyLines;
 	private boolean treatEolNewlineAsTwoLines;
 	private boolean includeNewlinesAtEndOfReturnedLines;
 	private boolean collapseNewlinesIntoOneChar;
@@ -32,16 +32,16 @@ public class LineSupplier {
 	 * @param str
 	 * @param off
 	 * @param len
-	 * @param treatEmptyLineAsLine true if empty lines, such as {@code ""} should be considered 1 line,
+	 * @param includeEmptyLines true if empty lines, such as {@code ""} should be considered 1 line,
 	 * false if no lines should be returned
 	 * @param treatEolNewlineAsTwoLines true if lines ending with a newline, such as {@code "...\n"} should be considered 2 lines,
 	 * false if it should only be treated as 1 line
 	 */
-	public LineSupplier(String str, int off, int len, boolean treatEmptyLineAsLine, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
+	public LineSupplier(String str, int off, int len, boolean includeEmptyLines, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
 		this.src = str;
 		this.off = off;
 		this.max = off + len;
-		this.treatEmptyLineAsLine = treatEmptyLineAsLine;
+		this.includeEmptyLines = includeEmptyLines;
 		this.treatEolNewlineAsTwoLines = treatEolNewlineAsTwoLines;
 		this.includeNewlinesAtEndOfReturnedLines = includeNewlinesAtEndOfReturnedLines;
 		this.collapseNewlinesIntoOneChar = collapseNewlinesIntoOneChar;
@@ -67,7 +67,7 @@ public class LineSupplier {
 
 		if(i >= maxI) {
 			// handle empty lines
-			if(this.treatEmptyLineAsLine && i == 0 && maxI == 0) {
+			if(this.includeEmptyLines && i == 0 && maxI == 0) {
 				this.off = maxI + 1;
 				return returnCharArray ? EMPTY_CHAR_ARRAY : "";
 			}

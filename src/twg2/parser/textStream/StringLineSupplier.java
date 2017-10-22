@@ -13,8 +13,8 @@ public class StringLineSupplier extends LineSupplier implements Supplier<String>
 	/**
 	 * @see LineSupplier#LineSupplier(String, int, int, boolean, boolean, boolean, boolean)
 	 */
-	public StringLineSupplier(String str, int off, int len, boolean treatEmptyLineAsLine, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
-		super(str, off, len, treatEmptyLineAsLine, treatEolNewlineAsTwoLines, includeNewlinesAtEndOfReturnedLines, collapseNewlinesIntoOneChar);
+	public StringLineSupplier(String str, int off, int len, boolean includeEmptyLines, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
+		super(str, off, len, includeEmptyLines, treatEolNewlineAsTwoLines, includeNewlinesAtEndOfReturnedLines, collapseNewlinesIntoOneChar);
 	}
 
 

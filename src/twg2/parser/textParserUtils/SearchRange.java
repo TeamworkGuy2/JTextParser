@@ -41,7 +41,7 @@ public class SearchRange {
 		mid = mid < low ? low : mid;
 
 		// TODO debugging
-		System.out.println("range: low=" + low + " high=" + high + " mid=" + mid + " rng=" + range);
+		//System.out.println("range: low=" + low + " high=" + high + " mid=" + mid + " rng=" + range);
 
 		return mid;
 	}

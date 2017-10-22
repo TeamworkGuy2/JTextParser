@@ -4,7 +4,18 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.12.0](N/A) - 2017-08-20
+### [0.13.0](N/A) - 2017-10-22
+#### Changed
+* Removed unnecessary parameters from `TextCharsParser` static `of(...)` methods
+* Refactored `LineCounter` to support new `unread()` method and move to next line afte reading '\n' instead of the next character after the newline
+* Added `LineCounter getLineNumbers()` method to TextParser interface and TextIteratorParser class
+
+#### Fixed
+* Fixed bug when repeatedly calling `LineCounter.getRawCompletedLineOffset()`.  Last line offset was getting added over and over each time method was called.
+
+
+--------
+### [0.12.0](https://github.com/TeamworkGuy2/JTextParser/commit/0cf40b362a720263fe38f7583af40a512020e8da) - 2017-08-20
 #### Added
 * CharParserPredicate interface (in place of `BiPredicates.CharObject<>`)
 

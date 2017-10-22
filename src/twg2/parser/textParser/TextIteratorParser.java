@@ -7,6 +7,7 @@ import java.io.PushbackReader;
 import java.io.UncheckedIOException;
 import java.util.function.Supplier;
 
+import twg2.parser.textStream.LineCounter;
 import twg2.parser.textStream.StringLineSupplier;
 import twg2.streams.EnhancedIterator;
 import twg2.streams.PeekableIterator;
@@ -28,6 +29,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	private int offset = -1;
 	private boolean started = false;
 	private boolean returned;
+	private LineCounter lineCtr;
 	//private SlidingStringView textBuf;
 
 
@@ -48,7 +50,14 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 		this.in = (PeekableIterator<Object>)reader;
 		this.inReturnsCharArray = inReturnsCharArray;
 		this.lineNum = lastLineNum;
+		this.lineCtr = new LineCounter(0);
 		//this.textBuf = new SlidingStringView(4096);
+	}
+
+
+	@Override
+	public LineCounter getLineNumbers() {
+		return this.lineCtr;
 	}
 
 
@@ -179,6 +188,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 			throw new IndexOutOfBoundsException(createUnreadErrorMsg(count));
 		}
 		offset -= count;
+		lineCtr.unread(count);
 		returned = true;
 	}
 
@@ -212,10 +222,10 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 
 		if(!this.started) {
 			Object line = this.in.hasNext() ? this.in.next() : null;
+			this.curLineChars = line != null ? (this.inReturnsCharArray ? (char[])line : ((String)line).toCharArray()) : null;
 			if(line != null) {
 				//this.textBuf.append(line);
 			}
-			this.curLineChars = line != null ? (this.inReturnsCharArray ? (char[])line : ((String)line).toCharArray()) : null;
 		}
 		else {
 			this.curLineChars = this.nextLineChars;
@@ -226,7 +236,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 
 		Object nextLine = this.in.hasNext() ? this.in.next() : null;
 		this.nextLineChars = nextLine != null ? (this.inReturnsCharArray ? (char[])nextLine : ((String)nextLine).toCharArray()) : null;
-		if(this.nextLineChars != null) {
+		if(nextLine != null) {
 			//this.textBuf.append(this.nextLineChars);
 		}
 
@@ -242,7 +252,20 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 		if(offset >= curLineChars.length) {
 			throw new IndexOutOfBoundsException(createEndOfLineErrorMsg());
 		}
-		return curLineChars[offset];
+		char ch = curLineChars[offset];
+		this.lineCtr.read(ch);
+		return ch;
+	}
+
+
+	private final String createUnreadErrorMsg(int count) {
+		return "cannot unread " + count + " from " + this.offset +
+				", offset must remain greater than or equal to -1";
+	}
+
+
+	private final String createEndOfLineErrorMsg() {
+		return "end of line, must read next line";
 	}
 
 
@@ -313,24 +336,11 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	}
 
 
-	public static TextIteratorParser of(String src, int off, int len, boolean treatEmptyLineAsLine, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
-		//BufferedReader reader = new BufferedReader(new StringReader(src));
-		Supplier<String> lines = new StringLineSupplier(src, off, len, treatEmptyLineAsLine, treatEolNewlineAsTwoLines, includeNewlinesAtEndOfReturnedLines, collapseNewlinesIntoOneChar);
+	public static TextIteratorParser of(String src, int off, int len, boolean includeEmptyLines, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
+		Supplier<String> lines = new StringLineSupplier(src, off, len, includeEmptyLines, treatEolNewlineAsTwoLines, includeNewlinesAtEndOfReturnedLines, collapseNewlinesIntoOneChar);
 		EnhancedIterator<String> lineReader = new EnhancedIterator<>(lines, null);
 		TextIteratorParser lineBuffer = new TextIteratorParser(lineReader, false);
-
 		return lineBuffer;
-	}
-
-
-	private final String createUnreadErrorMsg(int count) {
-		return "cannot unread " + count + " from " + this.offset +
-				", offset must remain greater than or equal to -1";
-	}
-
-
-	private final String createEndOfLineErrorMsg() {
-		return "end of line, must read next line";
 	}
 
 }

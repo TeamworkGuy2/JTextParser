@@ -1,7 +1,5 @@
 package twg2.parser.condition;
 
-import java.util.Collection;
-
 /** A token parser, used to determine whether a series of input token match a requirement.<br>
  * An instance of this interface must keep track of previous tokens passed to an 'accept' method implemented by sub-classes
  * and return false once the set of tokens forms an invalid sequence.
@@ -21,23 +19,37 @@ public interface ParserCondition {
 
 
 	/**
-	 * @return true if this precondition cannot create accept any further input to 'accept'
+	 * @return true if this precondition cannot accept any further input to 'accept'
 	 * That is, 'accept' will return false for any input
 	 */
 	public boolean isFailed();
 
 
+	/**
+	 * @return Create a copy of this condition
+	 */
 	public ParserCondition copy();
 
 
+	/**
+	 * @return Whether this condition can be recycled
+	 * @see #recycle()
+	 */
 	public boolean canRecycle();
 
 
+	/** Recycle this condition. Resetting it back to its default state. 
+	 * Default interface method throws {@link UnsupportedOperationException}
+	 * @return This condition recycled back to its default state
+	 */
 	public default ParserCondition recycle() {
 		throw new UnsupportedOperationException("ParserCondition recycling not supported");
 	}
 
 
+	/** Based on {@link #canRecycle()}, return the result of {@link #recycle()} or {@link #copy()}
+	 * @return this condition, reset to its default state, or a new copy of this condition
+	 */
 	public default ParserCondition copyOrReuse() {
 		ParserCondition filter = null;
 		if(this.canRecycle()) {
@@ -50,7 +62,7 @@ public interface ParserCondition {
 	}
 
 
-	public static boolean canRecycleAll(Collection<? extends ParserCondition> coll) {
+	public static boolean canRecycleAll(Iterable<? extends ParserCondition> coll) {
 		boolean canReuse = true;
 		for(ParserCondition cond : coll) {
 			canReuse &= cond.canRecycle();

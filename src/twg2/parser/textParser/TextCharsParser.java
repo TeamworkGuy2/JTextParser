@@ -24,7 +24,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 	private int maxReadPos;
 	private int curPos;
 	private int curLineNum;
-	private int nextLineOffsetIfRewinded = -1;
+	private int nextLineOffsetAfterRewind = -1;
 	private LineCounter lineCtr;
 
 
@@ -51,6 +51,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 	}
 
 
+	@Override
 	public LineCounter getLineNumbers() {
 		return this.lineCtr;
 	}
@@ -143,12 +144,10 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 	@Override
 	public void unread(int count) {
-		if(this.curPos - count < this.inputOff - 1) {
-			throw new IndexOutOfBoundsException(createUnreadErrorMsg(count));
-		}
+		if(this.curPos - count < this.inputOff - 1) { throw new IndexOutOfBoundsException(createUnreadErrorMsg(count)); }
 		this.curPos -= count;
 		this.curLineNum = this.lineCtr.getLineNumber(this.curPos);
-		this.nextLineOffsetIfRewinded = getNextLineOffsetIfRewinded();
+		this.nextLineOffsetAfterRewind = getNextLineOffsetIfRewinded();
 	}
 
 
@@ -159,20 +158,21 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 	private final char advanceToNextChar() {
 		this.curPos++;
-		if(this.curPos >= inputMaxExclusive) {
+		int pos = this.curPos;
+		if(pos >= inputMaxExclusive) {
 			throw new IndexOutOfBoundsException(createEndOfInputErrorMsg());
 		}
-		char ch = this.input[this.curPos];
+		char ch = this.input[pos];
 		// only adjust max position and line number when we're reading into new chars (i.e. unread() leftovers being re-read)
-		if(this.curPos > this.maxReadPos) {
-			this.maxReadPos = this.curPos;
+		if(pos > this.maxReadPos) {
+			this.maxReadPos = pos;
 			this.curLineNum = this.lineCtr.read(ch);
 		}
 		else {
 			// if we're re-reading after an unread()
-			if(this.nextLineOffsetIfRewinded > -1 && this.curPos >= this.nextLineOffsetIfRewinded) {
-				this.curLineNum = this.lineCtr.getLineNumber(this.curPos);
-				this.nextLineOffsetIfRewinded = getNextLineOffsetIfRewinded();
+			if(this.nextLineOffsetAfterRewind > -1 && pos >= this.nextLineOffsetAfterRewind) {
+				this.curLineNum = this.lineCtr.getLineNumber(pos);
+				this.nextLineOffsetAfterRewind = getNextLineOffsetIfRewinded();
 			}
 		}
 
@@ -191,11 +191,11 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 	 * @see StringLineSupplier
 	 */
 	public static TextCharsParser of(String src) {
-		return TextCharsParser.of(src, 0, src.length(), true, true, true);
+		return TextCharsParser.of(src, 0, src.length());
 	}
 
 
-	public static TextCharsParser of(String src, int off, int len, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
+	public static TextCharsParser of(String src, int off, int len) {
 		char[] chs = new char[len];
 		src.getChars(off, off + len, chs, 0);
 		TextCharsParser lineBuffer = new TextCharsParser(chs, 0, len);
@@ -204,18 +204,18 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 
 	public static TextCharsParser of(char[] src) {
-		return TextCharsParser.of(src, 0, src.length, true, true, true);
+		return TextCharsParser.of(src, 0, src.length);
 	}
 
 
-	public static TextCharsParser of(char[] src, int off, int len, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
+	public static TextCharsParser of(char[] src, int off, int len) {
 		TextCharsParser lineBuffer = new TextCharsParser(src, off, len);
 		return lineBuffer;
 	}
 
 
 	private final int getNextLineOffsetIfRewinded() {
-		int offset = this.lineCtr.size() > this.curLineNum + 1 ? this.lineCtr.getLineOffset(this.curLineNum + 1) : -1;
+		int offset = this.lineCtr.lineCount() > this.curLineNum + 1 ? this.lineCtr.getLineOffset(this.curLineNum + 1) : -1;
 		return offset;
 	}
 

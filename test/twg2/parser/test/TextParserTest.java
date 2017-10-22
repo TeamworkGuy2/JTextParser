@@ -345,7 +345,7 @@ public class TextParserTest {
 		testFunc.accept((str) -> TextIteratorParser.of(str), 0);
 		testFunc.accept((str) -> TextCharsParser.of(str), 0);
 		testFunc.accept((str) -> TextIteratorParser.of("~~~" + str, 3, str.length()), 0);
-		testFunc.accept((str) -> TextCharsParser.of(("~~~" + str).toCharArray(), 3, str.length(), true, true, true), 3);
+		testFunc.accept((str) -> TextCharsParser.of(("~~~" + str).toCharArray(), 3, str.length()), 3);
 	}
 
 }
