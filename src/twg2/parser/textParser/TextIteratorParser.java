@@ -111,11 +111,12 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 		// TODO this.offset should be using getPosition(), but buffer doesn't allow unread() into previous lines
 		if(this.offset < 1) { throw new IndexOutOfBoundsException(createUnreadErrorMsg(2)); }
 		// TODO somewhat messy hack to look back at the previous character and ensure that it's not one of certain chars that never precede numbers
-		// (e.g. if an A-Z character preceds a digit, it's not a number, it's part of an identifier)
+		// (e.g. if an A-Z character precedes a digit, it's not a number, it's part of an identifier)
 		this.unread(2);
 		this.offset++;
 		char prevCh = this.curLineChars[this.offset];
 		this.offset++;
+		this.lineCtr.read(prevCh);
 		return prevCh;
 	}
 

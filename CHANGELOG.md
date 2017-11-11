@@ -4,7 +4,13 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.13.0](N/A) - 2017-10-22
+### [0.13.1](N/A) - 2017-11-11
+#### Fixed
+* Patched `TextIteratorParser.prevChar()` bug
+
+
+--------
+### [0.13.0](https://github.com/TeamworkGuy2/JTextParser/commit/b73e5c774f379c6a2202ab2088834f8de9412cbd) - 2017-10-22
 #### Changed
 * Removed unnecessary parameters from `TextCharsParser` static `of(...)` methods
 * Refactored `LineCounter` to support new `unread()` method and move to next line afte reading '\n' instead of the next character after the newline
