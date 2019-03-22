@@ -1,6 +1,5 @@
 JTextParser
 ==============
-version: 0.13.1
 
 Interfaces, default implementations, and helper functions for parsing structured text (such as code).
 

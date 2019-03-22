@@ -3,7 +3,7 @@ package twg2.parser.textFragment;
 import java.util.Arrays;
 import java.util.List;
 
-/**
+/** Represents the location of a fragment of text with absolute and line/column offsets and end indexes
  * @author TeamworkGuy2
  * @since 2015-3-7
  */
@@ -42,6 +42,10 @@ public interface TextFragmentRef {
 	public int getColumnEnd();
 
 
+	/** Check if this text fragment contains/encompasses (inclusive) the given text fragment
+	 * @param frag the text fragment to compare to
+	 * @return true if this text fragment contains/encompasses the given text fragment
+	 */
 	public default boolean contains(TextFragmentRef frag) {
 		return this.getOffsetStart() <= frag.getOffsetStart() &&
 			this.getOffsetEnd() >= frag.getOffsetEnd();

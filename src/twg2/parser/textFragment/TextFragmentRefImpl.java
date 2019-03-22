@@ -2,18 +2,59 @@ package twg2.parser.textFragment;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.val;
-
-@AllArgsConstructor
 public class TextFragmentRefImpl implements TextFragmentRef {
-	private final @Getter int offsetStart;
-	private final @Getter int offsetEnd;
-	private final @Getter int lineStart;
-	private final @Getter int columnStart;
-	private final @Getter int lineEnd;
-	private final @Getter int columnEnd;
+	private final int offsetStart;
+	private final int offsetEnd;
+	private final int lineStart;
+	private final int columnStart;
+	private final int lineEnd;
+	private final int columnEnd;
+
+
+	public TextFragmentRefImpl(int offsetStart, int offsetEnd, int lineStart, int columnStart, int lineEnd, int columnEnd) {
+		this.offsetStart = offsetStart;
+		this.offsetEnd = offsetEnd;
+		this.lineStart = lineStart;
+		this.columnStart = columnStart;
+		this.lineEnd = lineEnd;
+		this.columnEnd = columnEnd;
+	}
+
+
+	@Override
+	public int getOffsetStart() {
+		return offsetStart;
+	}
+
+
+	@Override
+	public int getOffsetEnd() {
+		return offsetEnd;
+	}
+
+
+	@Override
+	public int getLineStart() {
+		return lineStart;
+	}
+
+
+	@Override
+	public int getColumnStart() {
+		return columnStart;
+	}
+
+
+	@Override
+	public int getLineEnd() {
+		return lineEnd;
+	}
+
+
+	@Override
+	public int getColumnEnd() {
+		return columnEnd;
+	}
 
 
 	@Override
@@ -39,8 +80,7 @@ public class TextFragmentRefImpl implements TextFragmentRef {
 
 	@Override
 	public CharSequence getText(List<? extends CharSequence> lines) {
-		val res = TextFragmentRef.getText(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, lines);
-		return res;
+		return TextFragmentRef.getText(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, lines);
 	}
 
 
@@ -73,7 +113,7 @@ public class TextFragmentRefImpl implements TextFragmentRef {
 	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof TextFragmentRef)) { return false; }
-		val frag = (TextFragmentRef)obj;
+		TextFragmentRef frag = (TextFragmentRef)obj;
 		return this.offsetStart == frag.getOffsetStart() &&
 			this.offsetEnd == frag.getOffsetEnd() &&
 			this.columnStart == frag.getColumnStart() &&

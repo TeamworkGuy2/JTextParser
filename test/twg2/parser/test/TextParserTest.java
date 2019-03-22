@@ -6,13 +6,13 @@ import java.util.function.Function;
 import org.junit.Assert;
 import org.junit.Test;
 
+import twg2.junitassist.checks.CheckTask;
 import twg2.parser.textParser.TextCharsParser;
 import twg2.parser.textParser.TextIteratorParser;
 import twg2.parser.textParser.TextParser;
 import twg2.parser.textParser.TextParserConditionalsDefault;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadPeek;
-import checks.CheckTask;
 
 public class TextParserTest {
 

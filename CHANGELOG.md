@@ -4,7 +4,14 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.13.1](N/A) - 2017-11-11
+### [0.13.2](N/A) - 2019-03-21
+#### Changed
+* Removed lombok dependency
+* Updated to latest version of test-checks
+
+
+--------
+### [0.13.1](https://github.com/TeamworkGuy2/JTextParser/commit/c31b58693aa14e03949d2265cb8d18c578b0f3bc) - 2017-11-11
 #### Fixed
 * Patched `TextIteratorParser.prevChar()` bug
 

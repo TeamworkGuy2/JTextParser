@@ -3,8 +3,8 @@ package twg2.parser.textParserUtils.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import twg2.junitassist.checks.CheckTask;
 import twg2.parser.textParserUtils.SlidingStringView;
-import checks.CheckTask;
 
 /**
  * @author TeamworkGuy2

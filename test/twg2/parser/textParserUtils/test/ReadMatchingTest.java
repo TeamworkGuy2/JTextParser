@@ -7,12 +7,12 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import twg2.junitassist.checks.CheckTask;
 import twg2.parser.textParser.TextIteratorParser;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadUnescape;
 import twg2.parser.textParserUtils.SearchRange;
 import twg2.text.test.DataUnescapePartialQuoted;
-import checks.CheckTask;
 
 /**
  * @author TeamworkGuy2

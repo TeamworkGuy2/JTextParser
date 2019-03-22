@@ -2,22 +2,95 @@ package twg2.parser.textFragment;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.val;
 import twg2.parser.textParser.ParserPos;
 
-@AllArgsConstructor
-@NoArgsConstructor
 public class TextFragmentRefImplMut implements TextFragmentRef {
-	private @Getter @Setter int offsetStart;
-	@Getter @Setter int offsetEnd;
-	private @Getter @Setter int lineStart;
-	private @Getter @Setter int columnStart;
-	@Getter @Setter int lineEnd;
-	@Getter @Setter int columnEnd;
+	private int offsetStart;
+	int offsetEnd;
+	private int lineStart;
+	private int columnStart;
+	int lineEnd;
+	int columnEnd;
+
+
+	public TextFragmentRefImplMut() {
+	}
+
+
+	public TextFragmentRefImplMut(int offsetStart, int offsetEnd, int lineStart, int columnStart, int lineEnd, int columnEnd) {
+		this.offsetStart = offsetStart;
+		this.offsetEnd = offsetEnd;
+		this.lineStart = lineStart;
+		this.columnStart = columnStart;
+		this.lineEnd = lineEnd;
+		this.columnEnd = columnEnd;
+	}
+
+
+	@Override
+	public int getOffsetStart() {
+		return offsetStart;
+	}
+
+
+	public void setOffsetStart(int offsetStart) {
+		this.offsetStart = offsetStart;
+	}
+
+
+	@Override
+	public int getOffsetEnd() {
+		return offsetEnd;
+	}
+
+
+	public void setOffsetEnd(int offsetEnd) {
+		this.offsetEnd = offsetEnd;
+	}
+
+
+	@Override
+	public int getLineStart() {
+		return lineStart;
+	}
+
+
+	public void setLineStart(int lineStart) {
+		this.lineStart = lineStart;
+	}
+
+
+	@Override
+	public int getColumnStart() {
+		return columnStart;
+	}
+
+
+	public void setColumnStart(int columnStart) {
+		this.columnStart = columnStart;
+	}
+
+
+	@Override
+	public int getLineEnd() {
+		return lineEnd;
+	}
+
+
+	public void setLineEnd(int lineEnd) {
+		this.lineEnd = lineEnd;
+	}
+
+
+	@Override
+	public int getColumnEnd() {
+		return columnEnd;
+	}
+
+
+	public void setColumnEnd(int columnEnd) {
+		this.columnEnd = columnEnd;
+	}
 
 
 	public void setStart(ParserPos pos) {
@@ -57,8 +130,7 @@ public class TextFragmentRefImplMut implements TextFragmentRef {
 
 	@Override
 	public CharSequence getText(List<? extends CharSequence> lines) {
-		val res = TextFragmentRef.getText(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, lines);
-		return res;
+		return TextFragmentRef.getText(offsetStart, offsetEnd, lineStart, lineEnd, columnStart, columnEnd, lines);
 	}
 
 
@@ -91,7 +163,7 @@ public class TextFragmentRefImplMut implements TextFragmentRef {
 	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof TextFragmentRef)) { return false; }
-		val frag = (TextFragmentRef)obj;
+		TextFragmentRef frag = (TextFragmentRef)obj;
 		return this.offsetStart == frag.getOffsetStart() &&
 			this.offsetEnd == frag.getOffsetEnd() &&
 			this.columnStart == frag.getColumnStart() &&

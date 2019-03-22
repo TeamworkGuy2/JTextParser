@@ -1,11 +1,6 @@
 package twg2.parser.textParser;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-/**
+/** Represents the absolution and line/column position of a text parser within text stream
  * @author TeamworkGuy2
  * @since 2015-9-17
  */
@@ -41,12 +36,53 @@ public interface ParserPos {
 
 
 
-	@AllArgsConstructor
-	@NoArgsConstructor
 	public static class Impl implements ParserPos {
-		@Getter @Setter int position;
-		@Getter @Setter int lineNumber;
-		@Getter @Setter int columnNumber;
+		int position;
+		int lineNumber;
+		int columnNumber;
+
+		public Impl() {
+		}
+
+
+		public Impl(int position, int lineNumber, int columnNumber) {
+			this.position = position;
+			this.lineNumber = lineNumber;
+			this.columnNumber = columnNumber;
+		}
+
+
+		@Override
+		public int getPosition() {
+			return position;
+		}
+
+
+		public void setPosition(int position) {
+			this.position = position;
+		}
+
+
+		@Override
+		public int getLineNumber() {
+			return lineNumber;
+		}
+
+
+		public void setLineNumber(int lineNumber) {
+			this.lineNumber = lineNumber;
+		}
+
+
+		@Override
+		public int getColumnNumber() {
+			return columnNumber;
+		}
+
+
+		public void setColumnNumber(int columnNumber) {
+			this.columnNumber = columnNumber;
+		}
 
 
 		@Override

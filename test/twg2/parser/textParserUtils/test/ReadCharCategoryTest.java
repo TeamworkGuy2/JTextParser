@@ -2,10 +2,10 @@ package twg2.parser.textParserUtils.test;
 
 import org.junit.Test;
 
-import twg2.parser.textParser.TextParser;
+import twg2.junitassist.checks.Check;
 import twg2.parser.textParser.TextIteratorParser;
+import twg2.parser.textParser.TextParser;
 import twg2.ranges.helpers.CharCategory;
-import checks.Check;
 
 /**
  * @author TeamworkGuy2
