@@ -4,7 +4,7 @@ import java.util.function.BiPredicate;
 
 import twg2.parser.textParser.TextParser;
 
-/** {@link BiPredicate} for characters read from a {@link TextParser}
+/** {@link BiPredicate}{@code <char, TextParser>} for characters read from a {@link TextParser}
  * @author TeamworkGuy2
  * @since 2017-08-20
  */

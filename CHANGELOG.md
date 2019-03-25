@@ -4,7 +4,18 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.13.2](N/A) - 2019-03-21
+### [0.13.3](N/A) - 2019-03-25
+#### Added
+* Added some documentation
+* Additional unit tests and unit test cleanup
+
+#### Changed
+* Added `ParserCondition.canRecycleAll(ParserCondition[] conds, int off, int len)`
+* Internal optimization of `TextCharsParser.nextChar()` (one less method call)
+
+
+--------
+### [0.13.2](https://github.com/TeamworkGuy2/JTextParser/commit/a7103f2d533aa110341623773299c5d95cbd3517) - 2019-03-21
 #### Changed
 * Removed lombok dependency
 * Updated to latest version of test-checks

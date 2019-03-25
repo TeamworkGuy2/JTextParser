@@ -1,6 +1,6 @@
 package twg2.parser.textParser;
 
-/** Represents the absolution and line/column position of a text parser within text stream
+/** Represents the absolution and line/column position of a text parser within a text stream
  * @author TeamworkGuy2
  * @since 2015-9-17
  */
@@ -36,6 +36,10 @@ public interface ParserPos {
 
 
 
+	/** A mutable {@link ParserPos} with absolute index, line number, and column number.
+	 * @author TeamworkGuy2
+	 * @since 2015-9-17
+	 */
 	public static class Impl implements ParserPos {
 		int position;
 		int lineNumber;

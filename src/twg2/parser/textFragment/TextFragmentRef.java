@@ -9,6 +9,9 @@ import java.util.List;
  */
 public interface TextFragmentRef {
 
+	/**
+	 * @return a copy of this text fragment reference
+	 */
 	public TextFragmentRef copy();
 
 	/**

@@ -109,7 +109,9 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	@Override
 	public char prevChar() {
 		// TODO this.offset should be using getPosition(), but buffer doesn't allow unread() into previous lines
-		if(this.offset < 1) { throw new IndexOutOfBoundsException(createUnreadErrorMsg(2)); }
+		if(this.offset < 1) {
+			throw new IndexOutOfBoundsException(createUnreadErrorMsg(2));
+		}
 		// TODO somewhat messy hack to look back at the previous character and ensure that it's not one of certain chars that never precede numbers
 		// (e.g. if an A-Z character precedes a digit, it's not a number, it's part of an identifier)
 		this.unread(2);
@@ -178,7 +180,9 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 
 	@Override
 	public void skip(int count) {
-		if(offset + count > curLineChars.length) { throw new IndexOutOfBoundsException(createEndOfLineErrorMsg()); }
+		if(offset + count > curLineChars.length) {
+			throw new IndexOutOfBoundsException("end of line, must read next line");
+		}
 		offset += count;
 	}
 
@@ -251,7 +255,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	private final char advanceToNextChar() {
 		offset++;
 		if(offset >= curLineChars.length) {
-			throw new IndexOutOfBoundsException(createEndOfLineErrorMsg());
+			throw new IndexOutOfBoundsException("end of line, must read next line");
 		}
 		char ch = curLineChars[offset];
 		this.lineCtr.read(ch);
@@ -262,11 +266,6 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	private final String createUnreadErrorMsg(int count) {
 		return "cannot unread " + count + " from " + this.offset +
 				", offset must remain greater than or equal to -1";
-	}
-
-
-	private final String createEndOfLineErrorMsg() {
-		return "end of line, must read next line";
 	}
 
 

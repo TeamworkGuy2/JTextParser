@@ -16,37 +16,6 @@ import twg2.parser.textParserUtils.ReadPeek;
 
 public class TextParserTest {
 
-
-	@Test
-	public void unescapeTest() {
-		runTests(this::unescapeTest);
-	}
-
-
-	public void unescapeTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
-		String[] inputs = new String[] {
-				"a \\\"block\\\" char '\\\"'",
-				" \\\\abc",
-				" \\abc",
-				"\\\"",
-		};
-		String[] expect = new String[] {
-				"a \"block\" char '\"'",
-				" \\abc",
-				" abc",
-				"\"",
-		};
-		Assert.assertEquals("array length", inputs.length, expect.length);
-		StringBuilder dst = new StringBuilder();
-
-		for(int i = 0, size = inputs.length; i < size; i++) {
-			ReadMatching.readUnescape(parserFactory.apply(inputs[i]), '\\', '"', false, '\n', dst);
-			Assert.assertEquals(expect[i], dst.toString());
-			dst.setLength(0);
-		}
-	}
-
-
 	@Test
 	public void readMatchingString() {
 		runTests(this::readMatchingString);
@@ -103,12 +72,42 @@ public class TextParserTest {
 
 
 	@Test
-	public void partialEscapedTest() {
-		
+	public void unescapeTest() {
+		runTests(this::unescapeTest);
 	}
 
 
-	public void partialEscapedTest(Function<String, TextParser> parserFactory) {
+	public void unescapeTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
+		String[] inputs = new String[] {
+				"a \\\"block\\\" char '\\\"'",
+				" \\\\abc",
+				" \\abc",
+				"\\\"",
+		};
+		String[] expect = new String[] {
+				"a \"block\" char '\"'",
+				" \\abc",
+				" abc",
+				"\"",
+		};
+		Assert.assertEquals("array length", inputs.length, expect.length);
+		StringBuilder dst = new StringBuilder();
+
+		for(int i = 0, size = inputs.length; i < size; i++) {
+			ReadMatching.readUnescape(parserFactory.apply(inputs[i]), '\\', '"', false, '\n', dst);
+			Assert.assertEquals(expect[i], dst.toString());
+			dst.setLength(0);
+		}
+	}
+
+
+	@Test
+	public void partialEscapedTest() {
+		runTests(this::partialEscapedTest);
+	}
+
+
+	public void partialEscapedTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
 		String[] inputs = new String[] {
 				"stuff \"with quotes\" other",
 				"first, next",

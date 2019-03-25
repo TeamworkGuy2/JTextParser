@@ -64,9 +64,9 @@ public interface ParserCondition {
 	}
 
 
-	public static boolean canRecycleAll(List<? extends ParserCondition> coll) {
-		for(int i = 0, size = coll.size(); i < size; i++) {
-			if(!coll.get(i).canRecycle()) {
+	public static boolean canRecycleAll(List<? extends ParserCondition> conds) {
+		for(int i = 0, size = conds.size(); i < size; i++) {
+			if(!conds.get(i).canRecycle()) {
 				return false;
 			}
 		}
@@ -74,8 +74,8 @@ public interface ParserCondition {
 	}
 
 
-	public static boolean canRecycleAll(Iterable<? extends ParserCondition> coll) {
-		for(ParserCondition cond : coll) {
+	public static boolean canRecycleAll(Iterable<? extends ParserCondition> conds) {
+		for(ParserCondition cond : conds) {
 			if(!cond.canRecycle()) {
 				return false;
 			}
@@ -85,9 +85,19 @@ public interface ParserCondition {
 
 
 	@SafeVarargs
-	public static boolean canRecycleAll(ParserCondition... coll) {
-		for(ParserCondition cond : coll) {
+	public static boolean canRecycleAll(ParserCondition... conds) {
+		for(ParserCondition cond : conds) {
 			if(!cond.canRecycle()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	public static boolean canRecycleAll(ParserCondition[] conds, int off, int len) {
+		for(int i = off, size = off + len; i < size; i++) {
+			if(!conds[i].canRecycle()) {
 				return false;
 			}
 		}

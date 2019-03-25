@@ -4,7 +4,7 @@ package twg2.parser.textParserUtils;
  * @author TeamworkGuy2
  * @since 2014-8-10
  */
-public class SearchRange {
+public final class SearchRange {
 	int initialRange;
 	int low;
 	int high;
@@ -38,12 +38,13 @@ public class SearchRange {
 		// weighted toward the lower end of the search range as the search range closes upward
 		int range = (high - low);
 		int mid = ((low + high) >>> 1) - (range > 1 ? (int)(initialRange/range * 0.25f) : 0);
-		mid = mid < low ? low : mid;
+		return (mid < low ? low : mid);
+	}
 
-		// TODO debugging
-		//System.out.println("range: low=" + low + " high=" + high + " mid=" + mid + " rng=" + range);
 
-		return mid;
+	@Override
+	public String toString() {
+		return "range: low=" + low + " high=" + high + " mid=" + getMid() + " rng=" + (high - low);
 	}
 
 }

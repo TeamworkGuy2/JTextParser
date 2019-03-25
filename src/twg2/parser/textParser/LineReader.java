@@ -14,7 +14,7 @@ import java.io.PushbackReader;
 public interface LineReader extends Closeable, ParserPos {
 
 	/**
-	 * @return the parser's current, 0 based, position within the underlying data stream
+	 * @return the parser's current, 0 based, position within the underlying data stream.
 	 * NOTE: returns -1 if the parser is not initialized
 	 */
 	@Override

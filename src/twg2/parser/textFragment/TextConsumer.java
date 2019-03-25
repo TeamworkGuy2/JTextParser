@@ -1,6 +1,7 @@
 package twg2.parser.textFragment;
 
-/**
+/** Consumer function which accepts a full text blob and indexes of a matched sub-portion of the string
+ * @see TextTransformer
  * @author TeamworkGuy2
  * @since 2015-5-27
  */

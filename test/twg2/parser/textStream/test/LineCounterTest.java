@@ -84,16 +84,14 @@ public class LineCounterTest {
 
 
 	public void assertAll(int... ints) {
-		if(ints == null || ints.length < 1) {
+		if(ints == null || ints.length < 2) {
 			return;
 		}
 		int first = ints[0];
 		int i = 0;
 		int size = ints.length;
 		for(int it : ints) {
-			if(first != it) {
-				Assert.assertEquals("item " + i + " of " + (size - 1) + " does not equal", first, it);
-			}
+			Assert.assertEquals("item " + i + " of " + (size - 1) + " does not equal", first, it);
 			i++;
 		}
 	}

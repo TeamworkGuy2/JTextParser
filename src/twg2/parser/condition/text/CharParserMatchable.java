@@ -6,6 +6,9 @@ package twg2.parser.condition.text;
  */
 public interface CharParserMatchable extends CharParser {
 
+	/**
+	 * @return a {@link CharParserPredicate} which tests whether a char matches the beginning of this parser
+	 */
 	public CharParserPredicate getFirstCharMatcher();
 
 }
