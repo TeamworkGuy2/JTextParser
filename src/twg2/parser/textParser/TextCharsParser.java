@@ -21,18 +21,12 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 	private int inputOff;
 	private int inputMaxExclusive;
 	private int maxReadPos;
+	/** character offset from 'input[0]' (0-based), -1 when parser is first initialized, maybe begin greater than 0 if 'inputOff' is specified */
 	private int curPos;
+	/** current line number (0-based) */
 	private int curLineNum;
 	private int nextLineOffsetAfterRewind = -1;
 	private LineCounter lineCtr;
-
-
-	/** Create a line buffer with a {@code char[]} source.
-	 * @param reader the buffered reader to read the lines of text from
-	 */
-	protected TextCharsParser(char[] input) {
-		this(input, 0, input.length);
-	}
 
 
 	/** Create a line buffer with a {@link char[]} source and offset and length.
@@ -88,16 +82,10 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 	@Override
 	public char prevChar() {
-		if(this.curPos <= this.inputOff) {
+		if(this.curPos - 1 < this.inputOff) {
 			throw new IndexOutOfBoundsException(createUnreadErrorMsg(2));
 		}
-		// TODO somewhat messy hack to look back at the previous character and ensure that it's not one of certain chars that never precede numbers
-		// (e.g. if an A-Z character precedes a digit, it's not a number, it's part of an identifier)
-		this.unread(2);
-		this.curPos++;
-		char prevCh = this.input[this.curPos];
-		this.curPos++;
-		this.curLineNum = this.lineCtr.getLineNumber(this.curPos);
+		char prevCh = this.input[this.curPos - 1];
 		return prevCh;
 	}
 
@@ -111,7 +99,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 		this.curPos = pos;
 
 		char ch = this.input[pos];
-		// only adjust max position and line number when we're reading into new chars (i.e. unread() leftovers being re-read)
+		// only adjust max position and line number when we're reading into new chars (i.e. not unread() leftovers being re-read)
 		if(pos > this.maxReadPos) {
 			this.maxReadPos = pos;
 			this.curLineNum = this.lineCtr.read(ch);
@@ -154,9 +142,20 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 	@Override
 	public void skip(int count) {
-		if(this.curPos + count > this.inputMaxExclusive) {
+		int pos = this.curPos;
+		if(pos + count > this.inputMaxExclusive) {
 			throw new IndexOutOfBoundsException("cannot read past end of input");
 		}
+		
+		for(int i = pos + 1, max = pos + count; i <= max; i++) {
+			// only adjust max position and line number when we're reading into new chars (i.e. not unread() leftovers being re-read)
+			if(i > this.maxReadPos) {
+				this.maxReadPos = i;
+				char ch = this.input[i];
+				this.curLineNum = this.lineCtr.read(ch);
+			}
+		}
+
 		this.curPos += count;
 	}
 
@@ -174,6 +173,18 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 
 	@Override
 	public void close() {
+	}
+
+
+	private final int getNextLineOffsetIfRewinded() {
+		int offset = this.lineCtr.lineCount() > this.curLineNum + 1 ? this.lineCtr.getLineOffset(this.curLineNum + 1) : -1;
+		return offset;
+	}
+
+
+	private final String createUnreadErrorMsg(int count) {
+		return "cannot unread " + count + " from " + this.curPos +
+				", offset must remain greater than or equal to -1";
 	}
 
 
@@ -208,18 +219,6 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 	public static TextCharsParser of(char[] src, int off, int len) {
 		TextCharsParser lineBuffer = new TextCharsParser(src, off, len);
 		return lineBuffer;
-	}
-
-
-	private final int getNextLineOffsetIfRewinded() {
-		int offset = this.lineCtr.lineCount() > this.curLineNum + 1 ? this.lineCtr.getLineOffset(this.curLineNum + 1) : -1;
-		return offset;
-	}
-
-
-	private final String createUnreadErrorMsg(int count) {
-		return "cannot unread " + count + " from " + this.curPos +
-				", offset must remain greater than or equal to -1";
 	}
 
 }

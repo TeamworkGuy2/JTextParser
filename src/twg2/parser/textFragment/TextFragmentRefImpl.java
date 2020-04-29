@@ -3,14 +3,22 @@ package twg2.parser.textFragment;
 import java.util.List;
 
 public class TextFragmentRefImpl implements TextFragmentRef {
-	private final int offsetStart;
-	private final int offsetEnd;
-	private final int lineStart;
-	private final int columnStart;
-	private final int lineEnd;
-	private final int columnEnd;
+	final int offsetStart;
+	final int offsetEnd;
+	final int lineStart;
+	final int columnStart;
+	final int lineEnd;
+	final int columnEnd;
 
 
+	/**
+	 * @param offsetStart absolute start position offset, inclusive, 0 based
+	 * @param offsetEnd absolute end position offset, exclusive, 0 based
+	 * @param lineStart starting row inclusive, 0 based
+	 * @param columnStart starting row, starting column, inclusive, 0 based
+	 * @param lineEnd ending row inclusive, 0 based
+	 * @param columnEnd ending row, ending column, inclusive, 0 based
+	 */
 	public TextFragmentRefImpl(int offsetStart, int offsetEnd, int lineStart, int columnStart, int lineEnd, int columnEnd) {
 		this.offsetStart = offsetStart;
 		this.offsetEnd = offsetEnd;
@@ -65,10 +73,8 @@ public class TextFragmentRefImpl implements TextFragmentRef {
 
 
 	@Override
-	public CharSequence getText(char[] chars, int offset, int length) {
-		if(offsetStart < offset) { throw new IndexOutOfBoundsException("offset " + offsetStart + ", expected " + offset + " or greater"); }
-		if(offsetEnd > offset + length) { throw new IndexOutOfBoundsException("end offset " + offsetEnd + ", expected " + (offset + length) + " or less"); }
-		return new String(chars, offsetStart, offsetEnd - offsetStart);
+	public CharSequence getText(int baseOffset, char[] chars, int offset, int length) {
+		return TextFragmentRef.getText(baseOffset, chars, offset, length, offsetStart, offsetEnd);
 	}
 
 

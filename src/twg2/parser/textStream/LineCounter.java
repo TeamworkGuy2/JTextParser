@@ -65,6 +65,10 @@ public class LineCounter {
 	}
 
 
+	/** Unread/rewind the specified number of characters.
+	 * Adjust line number and offset so that calls to {@link #getLineNumber()} reflect the new position.
+	 * @param count the positive number of characters to unread
+	 */
 	public void unread(int count) {
 		if(this.curOffset - count < 0) { throw new IndexOutOfBoundsException("cannot unread " + count + " from " + this.curOffset + ", offset must remain greater than or equal to 0"); }
 		this.curOffset -= count;
@@ -72,6 +76,9 @@ public class LineCounter {
 	}
 
 
+	/** Get the current 0-based line number
+	 * @return 0-based line number
+	 */
 	public int getLineNumber() {
 		return this.curLineNum;
 	}

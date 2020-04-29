@@ -7,7 +7,7 @@ import twg2.arrays.ArrayUtil;
  * @since 2015-6-12
  */
 public class SlidingStringView {
-	private long currentZeroActualOffset;
+	private int currentZeroActualOffset;
 	private StringBuilder cache;
 	private int maxSize;
 
@@ -17,12 +17,12 @@ public class SlidingStringView {
 	}
 
 
-	public SlidingStringView(long currentOffset, int maxSize) {
-		this(currentOffset, maxSize, new StringBuilder(maxSize > 4096 ? 4096 : maxSize));
+	public SlidingStringView(int currentOffset, int maxSize) {
+		this(currentOffset, maxSize, new StringBuilder(maxSize > 100000 ? 100000 : maxSize));
 	}
 
 
-	public SlidingStringView(long currentOffset, int maxSize, StringBuilder cache) {
+	public SlidingStringView(int currentOffset, int maxSize, StringBuilder cache) {
 		if(maxSize < 1) {
 			throw new IllegalArgumentException("maxSize must be greater than 0: " + maxSize);
 		}
@@ -32,7 +32,7 @@ public class SlidingStringView {
 	}
 
 
-	public long length() {
+	public int getPosition() {
 		return currentZeroActualOffset + cache.length();
 	}
 
@@ -65,7 +65,6 @@ public class SlidingStringView {
 
 
 	public void append(char ch) {
-		// if the length of this single input is larger than the buffer, only insert the last N values equal to the cache size
 		makeRoomFor(1);
 		this.cache.append(ch);
 	}
@@ -76,37 +75,46 @@ public class SlidingStringView {
 	}
 
 
+	/** Append sub-array of characters to this string view.
+	 * If the length of this input is larger than the buffer, only the last N values equal to the cache size are added.
+	 * The internal offset is adjusted to reflect the full number of characters added.
+	 */
 	public void append(char[] chars, int off, int len) {
 		ArrayUtil.checkBoundsThrows(chars, off, len);
 
-		// if the length of this single input is larger than the buffer, only insert the last N values equal to the cache size
-		if(len > maxSize) {
-			int overflowSize = (len - maxSize);
-			off += overflowSize;
-			currentZeroActualOffset += overflowSize;
-			len = maxSize;
-			cache.setLength(0);
-		}
 		makeRoomFor(len);
+
+		int overflowSize = len - maxSize;
+		if(overflowSize > 0) {
+			off += overflowSize;
+			len = maxSize;
+		}
+
 		this.cache.append(chars, off, len);
 	}
 
 
+	/**
+	 * @see {{@link #append(CharSequence, int, int)}
+	 */
 	public void append(CharSequence str) {
 		append(str, 0, str.length());
 	}
 
 
+	/** Append sub-string to this string view.
+	 * If the length of this input is larger than the buffer, only the last N values equal to the cache size are added.
+	 * The internal offset is adjusted to reflect the full number of characters added.
+	 */
 	public void append(CharSequence str, int off, int len) {
-		// if the length of this single input is larger than the buffer, only insert the last N values equal to the cache size
-		if(len > maxSize) {
-			int overflowSize = (len - maxSize);
-			off += overflowSize;
-			currentZeroActualOffset += overflowSize;
-			len = maxSize;
-			cache.setLength(0);
-		}
 		makeRoomFor(len);
+
+		int overflowSize = len - maxSize;
+		if(overflowSize > 0) {
+			off += overflowSize;
+			len = maxSize;
+		}
+
 		this.cache.append(str, off, off + len);
 	}
 
@@ -115,8 +123,14 @@ public class SlidingStringView {
 		int newSize = getCacheSize() + len;
 		if(newSize > maxSize) {
 			int trimCount = newSize - maxSize;
-			currentZeroActualOffset += (trimCount);
-			cache.delete(0, trimCount);
+			currentZeroActualOffset += trimCount;
+
+			if(len >= maxSize) {
+				cache.setLength(0);
+			}
+			else {
+				cache.delete(0, trimCount);
+			}
 		}
 	}
 

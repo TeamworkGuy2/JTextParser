@@ -169,7 +169,7 @@ public interface TextParserConditionals {
 
 
 	/** Read as many characters as match, up to {@code count}, from the current line
-	 * until a {@code endCh} is encountered, only if it is not proceeded by {@code escCh}
+	 * until an {@code endCh} is encountered, only if it is not proceeded by {@code escCh}
 	 * or until {@code stopCh} is encountered regardless of preceding character
 	 * @param dropEscChars true to not append escape characters to {@code dst}, false add all matching characters to dst
 	 */
@@ -186,6 +186,14 @@ public interface TextParserConditionals {
 	public int nextIfNotPrecededBy(char endCh, char escCh, char stopCh1, char stopCh2, char stopCh3, boolean dropEscChars, int count, Appendable dst);
 
 
+	/** Read as many characters as match between two inclusive values, up to {@code count}, from the current line
+	 * @param lower the lower inclusive character
+	 * @param upper the upper inclusive character
+	 * @param count the maximum number of matching characters to read, or 0 to
+	 * read as many matching characters as possible
+	 * @param dst optional destination to store read characters in
+	 * @return the number of characters read
+	 */
 	public int nextBetween(char lower, char upper, int count, Appendable dst);
 
 }

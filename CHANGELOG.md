@@ -4,7 +4,34 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.13.3](N/A) - 2019-03-25
+### [0.14.0](N/A) - 2020-04-28
+#### Changed
+* Removed unnecessary `dropEscChars` parameter from several `ReadIsMatching` methods
+* `ReadMatching.FromString` inner class static methods flattened into parent `ReadMatching` class
+* `ReadMatching.binaryStartsWith()` added `keyOffset` parameter
+* `ReadUnescape.Default` inner class static methods flattened into parent `ReadUnescape` class
+* `ReadUnescape` and `ReadWhitespace` removed default constructor, static class with only static methods
+* `SlidingStringView.length()` renamed `getPosition()` and return type changed from long to int
+* `TextCharsParser.prevChar()` simplified, hopefully better performance
+* Improve documentation
+* Improved unit tests
+
+#### Fixed
+* Several bugs uncovered by unit tests
+  * `TextCharsParser.skip()` not tracking newlines skipped, slight performance penalty
+  * `TextFragmentRef` fixed issue with `dst` parameter calling `merge()` and `span()`
+  * `TextFragmentRef.getText()` inconsistent parameters, added a new parameter
+  * `TextParserConditionalsDefault.nextIfNotPrecededBy()` failing if `dst` buffer was null (which is allowed)
+  * `ReadRepeats.readRepeat()` several overloads were failing due to a missing loop termination condition
+  * `SlidingStringView` offsets properly tracked when inputs larger than cache size are appended
+
+#### Removed
+* `ReadBoundedPattern` since it was unused across other projects (JTextTokenizer and JParserCode)
+* `ReadPeek` because it only had two methods and only `peekNext(LineReader)` was used elsewhere and it was only 2 lines
+
+
+--------
+### [0.13.3](https://github.com/TeamworkGuy2/JTextParser/commit/079f9c6e5ae26bc21d9ae2a8c1ea4ebb9d0d4538) - 2019-03-25
 #### Added
 * Added some documentation
 * Additional unit tests and unit test cleanup

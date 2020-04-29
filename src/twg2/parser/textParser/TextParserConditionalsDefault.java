@@ -308,7 +308,7 @@ public interface TextParserConditionalsDefault extends TextParser, TextParserCon
 				prevCh = ch;
 			}
 
-			if(i > 0) {
+			if(dst != null && i > 0) {
 				dst.append(prevCh);
 			}
 			return i;
@@ -354,7 +354,7 @@ public interface TextParserConditionalsDefault extends TextParser, TextParserCon
 				prevCh = ch;
 			}
 
-			if(i > 0) {
+			if(dst != null && i > 0) {
 				dst.append(prevCh);
 			}
 			return i;
@@ -377,7 +377,7 @@ public interface TextParserConditionalsDefault extends TextParser, TextParserCon
 	}
 
 
-	/** Read characters matching characters between two inclusive values
+	/** Read matching characters between two inclusive values
 	 * @param lower the lower inclusive character
 	 * @param upper the upper inclusive character
 	 * @param count the maximum number of matching characters to read, or 0 to
@@ -411,7 +411,7 @@ public interface TextParserConditionalsDefault extends TextParser, TextParserCon
 	}
 
 
-	/** Read characters matching characters between two inclusive values
+	/** Read matching characters between two inclusive ranges of values
 	 * @param lower the lower inclusive character
 	 * @param upper the upper inclusive character
 	 * @param count the maximum number of matching characters to read, or 0 to

@@ -11,29 +11,23 @@ import twg2.parser.textParser.TextParser;
  */
 public class ReadUnescape {
 
-	/**
-	 * @author TeamworkGuy2
-	 * @since 2015-6-17
+	private ReadUnescape() { throw new AssertionError("cannot instantiate static class ReadUnescape"); }
+
+
+	/** Read and unescape a partial quoted string that does not allow newline characters
+	 * @see #readUnescapePartialQuoted(TextParser, char, char, char, char, boolean, char, Appendable)
 	 */
-	public static class Default {
-
-		/** Read and unescape a partial quoted string that does not allow newline characters
-		 * @see ReadUnescape#readUnescapePartialQuoted(TextParser, char, char, char, char, boolean, char, Appendable)
-		 */
-		public static final int readUnescapePartialQuoted(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, Appendable dst) {
-			return ReadUnescape.readUnescapePartialQuoted(in, quoteChar, escChar, endChar1, endChar2, false, '\n', dst);
-		}
-
-
-		/** Read and unescape a quoted string that does not allow newline characters
-		 * @see ReadUnescape#readUnescapeQuoted(TextParser, char, char, char, char, boolean, char, Appendable)
-		 */
-		public static final int readUnescapeQuoted(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, Appendable dst) {
-			return ReadUnescape.readUnescapeQuoted(in, quoteChar, escChar, endChar1, endChar2, false, '\n', dst);
-		}
+	public static final int readUnescapePartialQuoted(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, Appendable dst) {
+		return readUnescapePartialQuoted(in, quoteChar, escChar, endChar1, endChar2, false, '\n', dst);
 	}
 
 
+	/** Read and unescape a quoted string that does not allow newline characters
+	 * @see #readUnescapeQuoted(TextParser, char, char, char, char, boolean, char, Appendable)
+	 */
+	public static final int readUnescapeQuoted(TextParser in, char quoteChar, char escChar, char endChar1, char endChar2, Appendable dst) {
+		return readUnescapeQuoted(in, quoteChar, escChar, endChar1, endChar2, false, '\n', dst);
+	}
 
 
 	/** Read a partially quoted string using {@link #readUnescapePartialOrFullQuotedThrows}
@@ -59,7 +53,7 @@ public class ReadUnescape {
 
 	/** Reads 'quoted' strings, optionally preceded by non-quoted characters and ended
 	 * by one of a few end characters or an ending quote if a beginning quote has been encountered.<br>
-	 * Note: Ending char immediately following are closing quote are ready from {@code in} but not counted in the return number
+	 * Note: Ending char immediately following a closing quote are read from {@code in} but not counted in the return number.<br>
 	 * Example: {@code key: "value, (stuff)", mk}<br>
 	 * with: quote=" esc=\ end1=, end2=)<br>
 	 * returns: {@code key: "value, (stuff)"}<br>
@@ -156,9 +150,9 @@ public class ReadUnescape {
 						in.unread(1);
 					}
 
-					// throw error if end char required and not found
+					// throw error if end char is required and not found
 					if(throwIfNoEndChar && !foundEndChar) {
-						throw new IllegalStateException("string does not with ending character '" + endChar1 + "' or '" + endChar2 + "'");
+						throw new IllegalStateException("string does not end with ending character '" + endChar1 + "' or '" + endChar2 + "'");
 					}
 				}
 			}

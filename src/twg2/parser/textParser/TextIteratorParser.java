@@ -24,13 +24,12 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	private boolean inReturnsCharArray;
 	private char[] curLineChars;
 	private char[] nextLineChars;
-	private int previousLinesOffset;
+	private int previousLinesOffset; // total offset of previous lines up to the beginning of the current line
 	private int lineNum;
 	private int offset = -1;
 	private boolean started = false;
 	private boolean returned;
 	private LineCounter lineCtr;
-	//private SlidingStringView textBuf;
 
 
 	/** Create a line buffer with a {@link PeekableIterator} source
@@ -51,7 +50,6 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 		this.inReturnsCharArray = inReturnsCharArray;
 		this.lineNum = lastLineNum;
 		this.lineCtr = new LineCounter(0);
-		//this.textBuf = new SlidingStringView(4096);
 	}
 
 
@@ -79,7 +77,6 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	}
 
 
-	// TODO deprecating @Override
 	public int getLineRemaining() {
 		// - 1 because nextChar() returns the next offset, so only (remaining - 1) characters can be read
 		int remaining = this.curLineChars.length - this.offset - 1;
@@ -114,7 +111,11 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 		}
 		// TODO somewhat messy hack to look back at the previous character and ensure that it's not one of certain chars that never precede numbers
 		// (e.g. if an A-Z character precedes a digit, it's not a number, it's part of an identifier)
-		this.unread(2);
+		//this.unread(2);
+		this.offset -= 2;
+		this.lineCtr.unread(2);
+		this.returned = true;
+
 		this.offset++;
 		char prevCh = this.curLineChars[this.offset];
 		this.offset++;
@@ -183,6 +184,12 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 		if(offset + count > curLineChars.length) {
 			throw new IndexOutOfBoundsException("end of line, must read next line");
 		}
+		
+		for(int i = offset + 1, max = offset + count; i <= max; i++) {
+			char ch = curLineChars[i];
+			lineCtr.read(ch);
+		}
+
 		offset += count;
 	}
 
@@ -228,9 +235,6 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 		if(!this.started) {
 			Object line = this.in.hasNext() ? this.in.next() : null;
 			this.curLineChars = line != null ? (this.inReturnsCharArray ? (char[])line : ((String)line).toCharArray()) : null;
-			if(line != null) {
-				//this.textBuf.append(line);
-			}
 		}
 		else {
 			this.curLineChars = this.nextLineChars;
@@ -241,9 +245,6 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 
 		Object nextLine = this.in.hasNext() ? this.in.next() : null;
 		this.nextLineChars = nextLine != null ? (this.inReturnsCharArray ? (char[])nextLine : ((String)nextLine).toCharArray()) : null;
-		if(nextLine != null) {
-			//this.textBuf.append(this.nextLineChars);
-		}
 
 		this.started = true;
 		this.offset = -1; // adjust offset so nextChar() returns the first char the first time it is called
@@ -253,10 +254,10 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 
 
 	private final char advanceToNextChar() {
-		offset++;
-		if(offset >= curLineChars.length) {
+		if(offset + 1 >= curLineChars.length) {
 			throw new IndexOutOfBoundsException("end of line, must read next line");
 		}
+		offset++;
 		char ch = curLineChars[offset];
 		this.lineCtr.read(ch);
 		return ch;

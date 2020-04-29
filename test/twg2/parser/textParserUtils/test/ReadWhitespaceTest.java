@@ -31,9 +31,12 @@ public class ReadWhitespaceTest {
 
 		Assert.assertEquals("array lengths", inputs.length, expect.length);
 
-		for(int i = 0, size= inputs.length; i < size; i++) {
+		for(int i = 0, size = inputs.length; i < size; i++) {
 			int res = ReadWhitespace.readWhitespace(inputs[i], off);
-			Assert.assertEquals("input: " + inputs[i] + ", expect: " + expect[i] + ", result: " + res, expect[i], res);
+			Assert.assertEquals("i=" + i + " input: " + inputs[i], expect[i], res);
+
+			int res2 = ReadWhitespace.readWhitespace(inputs[i].toCharArray(), off);
+			Assert.assertEquals("i=" + i + " input: " + inputs[i], expect[i], res2);
 		}
 	}
 
@@ -57,7 +60,7 @@ public class ReadWhitespaceTest {
 
 		for(int i = 0, size= inputs.length; i < size; i++) {
 			int res = ReadWhitespace.readWhitespaceCustom(inputs[i], new char[] { ' ', '\t', '\n' }, 0);
-			Assert.assertEquals("i=" + i + ", expect: " + expect[i] + ", result: " + res, expect[i], res);
+			Assert.assertEquals("i=" + i, expect[i], res);
 		}
 	}
 

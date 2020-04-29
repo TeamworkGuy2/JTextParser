@@ -5,10 +5,10 @@ import java.util.List;
 import twg2.parser.textParser.ParserPos;
 
 public class TextFragmentRefImplMut implements TextFragmentRef {
-	private int offsetStart;
+	int offsetStart;
 	int offsetEnd;
-	private int lineStart;
-	private int columnStart;
+	int lineStart;
+	int columnStart;
 	int lineEnd;
 	int columnEnd;
 
@@ -109,16 +109,13 @@ public class TextFragmentRefImplMut implements TextFragmentRef {
 
 	@Override
 	public TextFragmentRefImplMut copy() {
-		TextFragmentRefImplMut copy = new TextFragmentRefImplMut(offsetStart, offsetEnd, lineStart, columnStart, lineEnd, columnEnd);
-		return copy;
+		return new TextFragmentRefImplMut(offsetStart, offsetEnd, lineStart, columnStart, lineEnd, columnEnd);
 	}
 
 
 	@Override
-	public CharSequence getText(char[] chars, int offset, int length) {
-		if(offsetStart < offset) { throw new IndexOutOfBoundsException("offset " + offsetStart + ", expected " + offset + " or greater"); }
-		if(offsetEnd > offset + length) { throw new IndexOutOfBoundsException("end offset " + offsetEnd + ", expected " + (offset + length) + " or less"); }
-		return new String(chars, offsetStart, offsetEnd - offsetStart);
+	public CharSequence getText(int baseOffset, char[] chars, int offset, int length) {
+		return TextFragmentRef.getText(baseOffset, chars, offset, length, offsetStart, offsetEnd);
 	}
 
 

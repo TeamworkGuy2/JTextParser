@@ -25,11 +25,11 @@ public final class ReadRepeats {
 	 * @return the number of characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final BufferedReader in, final char ch, final int max) {
+	public static int readRepeat(final BufferedReader in, final char ch, final int max) {
 		int read = 0;
 		try {
 			while(true) {
-					in.mark(1);
+				in.mark(1);
 				if((char)in.read() == ch) {
 					read++;
 					if(max != 0 && read >= max) {
@@ -51,7 +51,7 @@ public final class ReadRepeats {
 	/**
 	 * @see #readRepeat(BufferedReader, char[], int, int, int, StringBuilder)
 	 */
-	public static final StringBuilder readRepeat(final BufferedReader in, final char[] ch, final int max, StringBuilder dst) {
+	public static StringBuilder readRepeat(final BufferedReader in, final char[] ch, final int max, StringBuilder dst) {
 		return readRepeat(in, ch, 0, ch.length, max, dst);
 	}
 
@@ -70,7 +70,7 @@ public final class ReadRepeats {
 	 * @return the {@code dst} string builder
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final StringBuilder readRepeat(final BufferedReader in, final char[] ch, final int chOff, final int chLen,
+	public static StringBuilder readRepeat(final BufferedReader in, final char[] ch, final int chOff, final int chLen,
 			final int max, StringBuilder dst) {
 		int read = 0;
 		try {
@@ -98,12 +98,12 @@ public final class ReadRepeats {
 	}
 
 
-	public static final int readRepeat(String str, final char ch, final int max) {
+	public static int readRepeat(String str, final char ch, final int max) {
 		return readRepeat(str, 0, str.length(), ch, max);
 	}
 
 
-	public static final int readRepeat(String str, final int strOff, final char ch, final int max) {
+	public static int readRepeat(String str, final int strOff, final char ch, final int max) {
 		return readRepeat(str, strOff, str.length() - strOff, ch, max);
 	}
 
@@ -119,7 +119,7 @@ public final class ReadRepeats {
 	 * @return the number of characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final String str, final int strOff, final int strLen, final char ch, final int max) {
+	public static int readRepeat(final String str, final int strOff, final int strLen, final char ch, final int max) {
 		if(strOff + strLen > str.length()) { return 0; }
 		int read = strOff;
 		for(int size = strOff + strLen; read < size; ) {
@@ -140,7 +140,7 @@ public final class ReadRepeats {
 	/**
 	 * @see #readRepeat(String, int, char[], int, int, int, Appendable)
 	 */
-	public static final String readRepeat(final String str, final int strOffset, final char[] ch, final int max) {
+	public static String readRepeat(final String str, final int strOffset, final char[] ch, final int max) {
 		return readRepeat(str, strOffset, ch, 0, ch.length, max);
 	}
 
@@ -148,19 +148,19 @@ public final class ReadRepeats {
 	/**
 	 * @see #readRepeat(String, int, char[], int, int, int, Appendable)
 	 */
-	public static final String readRepeat(final String str, final int strOffset, final char[] ch,
+	public static String readRepeat(final String str, final int strOffset, final char[] ch,
 			final int offset, final int length, final int max) {
 		StringBuilder tmpStrB = new StringBuilder();
 		readRepeat(str, strOffset, ch, offset, length, max, tmpStrB);
-		String resultString = tmpStrB.toString();
-		return resultString;
+		String result = tmpStrB.toString();
+		return result;
 	}
 
 
 	/**
 	 * @see #readRepeat(String, int, char[], int, int, int, Appendable)
 	 */
-	public static final int readRepeat(final String str, final int strOffset, final char[] ch,
+	public static int readRepeat(final String str, final int strOffset, final char[] ch,
 			final int max, final Appendable dst) {
 		return readRepeat(str, strOffset, ch, 0, ch.length, max, dst);
 	}
@@ -169,8 +169,7 @@ public final class ReadRepeats {
 	/** Read characters from a string until a character does not match one of the specified character.
 	 * @param str the string read characters from
 	 * @param strOffset the offset into the string at which to start reading repeat characters
-	 * @param ch the array of possible characters to compare to each character
-	 * read from the input stream to
+	 * @param ch the array of possible characters to compare to each character from the input string
 	 * @param chOff the offset into the array at which matching characters to compare begin
 	 * @param chLen the offset into the array at which matching characters to compare end
 	 * @param max the maximum number of repeating characters to read, or 0 to read as
@@ -179,7 +178,7 @@ public final class ReadRepeats {
 	 * @return the number of matching characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final String str, final int strOffset, final char[] ch,
+	public static int readRepeat(final String str, final int strOffset, final char[] ch,
 			final int chOff, final int chLen, final int max, final Appendable dst) {
 		if(strOffset >= str.length()) { return 0; }
 		int read = 0;
@@ -209,7 +208,7 @@ public final class ReadRepeats {
 	/**
 	 * @see #readRepeat(char[], int, char[], int, int, int, Appendable)
 	 */
-	public static final String readRepeat(final char[] str, final int strOffset, final char[] ch,
+	public static String readRepeat(final char[] str, final int strOffset, final char[] ch,
 			final int max) {
 		return readRepeat(str, strOffset, ch, 0, ch.length, max);
 	}
@@ -218,19 +217,19 @@ public final class ReadRepeats {
 	/**
 	 * @see #readRepeat(char[], int, char[], int, int, int, Appendable)
 	 */
-	public static final String readRepeat(final char[] str, final int strOffset, final char[] ch,
+	public static String readRepeat(final char[] str, final int strOffset, final char[] ch,
 			final int offset, final int length, final int max) {
 		StringBuilder tmpStrB = new StringBuilder();
 		readRepeat(str, strOffset, ch, offset, length, max, tmpStrB);
-		String resultString = tmpStrB.toString();
-		return resultString;
+		String result = tmpStrB.toString();
+		return result;
 	}
 
 
 	/**
 	 * @see #readRepeat(char[], int, char[], int, int, int, Appendable)
 	 */
-	public static final int readRepeat(final char[] str, final int strOffset, final char[] ch,
+	public static int readRepeat(final char[] str, final int strOffset, final char[] ch,
 			final int max, final Appendable dst) {
 		return readRepeat(str, strOffset, ch, 0, ch.length, max, dst);
 	}
@@ -240,7 +239,7 @@ public final class ReadRepeats {
 	 * @param str the array of character to read from
 	 * @param strOffset the offset into the string at which to start reading repeat characters
 	 * @param ch the array of possible characters to compare to each character
-	 * read from the input stream to
+	 * from the input 'str' char array
 	 * @param chOff the offset into the array at which matching characters to compare begin
 	 * @param chLen the offset into the array at which matching characters to compare end
 	 * @param max the maximum number of repeating characters to read, or 0 to read as
@@ -249,12 +248,12 @@ public final class ReadRepeats {
 	 * @return the number of matching characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final char[] str, final int strOffset, final char[] ch,
+	public static int readRepeat(final char[] str, final int strOffset, final char[] ch,
 			final int chOff, final int chLen, final int max, final Appendable dst) {
 		if(strOffset >= str.length) { return 0; }
 		int read = 0;
 		try {
-			while(true) {
+			for(int size = str.length - strOffset; read < size; ) {
 				char c = str[strOffset + read];
 				// Add a character if it matches
 				if(ArrayUtil.indexOf(ch, chOff, chLen, c) > -1) {
@@ -279,20 +278,20 @@ public final class ReadRepeats {
 	/** Read characters from a char array until a character does not match one of the specified character.
 	 * @param str the array of character to read from
 	 * @param strOffset the offset into the string at which to start reading repeat characters
-	 * @param lowerBound the lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound the upper bound (inclusive) of characters to read from the input stream
+	 * @param lowerBound the lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound the upper bound (inclusive) of characters to read from the input 'str' char array
 	 * @param max the maximum number of repeating characters to read, or 0 to read as
 	 * many matching characters as possible
 	 * @param dst the destination to write the read characters to
 	 * @return the number of matching characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final char[] str, final int strOffset,
+	public static int readRepeat(final char[] str, final int strOffset,
 			char lowerBound, char upperBound, final int max, final Appendable dst) {
 		if(strOffset >= str.length) { return 0; }
 		int read = 0;
 		try {
-			while(true) {
+			for(int size = str.length - strOffset; read < size; ) {
 				char c = str[strOffset + read];
 				// Add the character if it matches, else break from the loop and return
 				if(c >= lowerBound && c <= upperBound) {
@@ -316,24 +315,24 @@ public final class ReadRepeats {
 	/** Read characters from a char array until a character does not match one of the specified character.
 	 * @param str the array of character to read from
 	 * @param strOffset the offset into the string at which to start reading repeat characters
-	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input stream
-	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input stream
+	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input 'str' char array
+	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input 'str' char array
 	 * @param max the maximum number of repeating characters to read, or 0 to read as
 	 * many matching characters as possible
 	 * @param dst the destination to write the read characters to
 	 * @return the number of matching characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final char[] str, final int strOffset,
+	public static int readRepeat(final char[] str, final int strOffset,
 			char lowerBound1, char upperBound1,
 			char lowerBound2, char upperBound2,
 			final int max, final Appendable dst) {
 		if(strOffset >= str.length) { return 0; }
 		int read = 0;
 		try {
-			while(true) {
+			for(int size = str.length - strOffset; read < size; ) {
 				char c = str[strOffset + read];
 				// Add the character if it matches, else break from the loop and return
 				if((c >= lowerBound1 && c <= upperBound1) || (c >= lowerBound2 && c <= upperBound2)) {
@@ -357,19 +356,19 @@ public final class ReadRepeats {
 	/** Read characters from a char array until a character does not match one of the specified character.
 	 * @param str the array of character to read from
 	 * @param strOffset the offset into the string at which to start reading repeat characters
-	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input stream
-	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input stream
-	 * @param lowerBound3 the third lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound3 the third upper bound (inclusive) of characters to read from the input stream
+	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input 'str' char array
+	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input 'str' char array
+	 * @param lowerBound3 the third lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound3 the third upper bound (inclusive) of characters to read from the input 'str' char array
 	 * @param max the maximum number of repeating characters to read, or 0 to read as
 	 * many matching characters as possible
 	 * @param dst the destination to write the read characters to
 	 * @return the number of matching characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final char[] str, final int strOffset,
+	public static int readRepeat(final char[] str, final int strOffset,
 			char lowerBound1, char upperBound1,
 			char lowerBound2, char upperBound2,
 			char lowerBound3, char upperBound3,
@@ -377,7 +376,7 @@ public final class ReadRepeats {
 		if(strOffset >= str.length) { return 0; }
 		int read = 0;
 		try {
-			while(true) {
+			for(int size = str.length - strOffset; read < size; ) {
 				char c = str[strOffset + read];
 				// Add the character if it matches, else break from the loop and return
 				if((c >= lowerBound1 && c <= upperBound1) ||
@@ -403,12 +402,12 @@ public final class ReadRepeats {
 	/** Read characters from a char array until a character does not match one of the specified character.
 	 * @param str the array of character to read from
 	 * @param strOffset the offset into the string at which to start reading repeat characters
-	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input stream
-	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input stream
-	 * @param lowerBound3 the third lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound3 the third upper bound (inclusive) of characters to read from the input stream
+	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input 'str' char array
+	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input 'str' char array
+	 * @param lowerBound3 the third lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound3 the third upper bound (inclusive) of characters to read from the input 'str' char array
 	 * @param c1 another optional character to read
 	 * @param c2 another optional character to read
 	 * @param max the maximum number of repeating characters to read, or 0 to read as
@@ -417,7 +416,7 @@ public final class ReadRepeats {
 	 * @return the number of matching characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final char[] str, final int strOffset,
+	public static int readRepeat(final char[] str, final int strOffset,
 			char lowerBound1, char upperBound1,
 			char lowerBound2, char upperBound2,
 			char lowerBound3, char upperBound3,
@@ -425,7 +424,7 @@ public final class ReadRepeats {
 		if(strOffset >= str.length) { return 0; }
 		int read = 0;
 		try {
-			while(true) {
+			for(int size = str.length - strOffset; read < size; ) {
 				char c = str[strOffset + read];
 				// Add the character if it matches, else break from the loop and return
 				if(c == c1 || c == c2 || (c >= lowerBound1 && c <= upperBound1) ||
@@ -455,19 +454,19 @@ public final class ReadRepeats {
 	 * read from the input stream to
 	 * @param offset the offset into the array at which matching characters to compare begin
 	 * @param length the offset into the array at which matching characters to compare end
-	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input stream
-	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input stream
-	 * @param lowerBound3 the third lower bound (inclusive) of characters to read from the input stream
-	 * @param upperBound3 the third upper bound (inclusive) of characters to read from the input stream
+	 * @param lowerBound1 the lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound1 the upper bound (inclusive) of characters to read from the input 'str' char array
+	 * @param lowerBound2 the second lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound2 the second upper bound (inclusive) of characters to read from the input 'str' char array
+	 * @param lowerBound3 the third lower bound (inclusive) of characters to read from the input 'str' char array
+	 * @param upperBound3 the third upper bound (inclusive) of characters to read from the input 'str' char array
 	 * @param max the maximum number of repeating characters to read, or 0 to read as
 	 * many matching characters as possible
 	 * @param dst the destination to write the read characters to
 	 * @return the number of matching characters read
 	 * @throws UncheckedIOException if there is an error reading from the input stream
 	 */
-	public static final int readRepeat(final char[] str, final int strOffset, final char[] ch,
+	public static int readRepeat(final char[] str, final int strOffset, final char[] ch,
 			final int offset, final int length,
 			char lowerBound1, char upperBound1,
 			char lowerBound2, char upperBound2,
@@ -478,8 +477,8 @@ public final class ReadRepeats {
 		int read = 0;
 		boolean match = false;
 		try {
-			while(true) {
-				char c = str[strOffset+read];
+			for(int size = str.length - strOffset; read < size; ) {
+				char c = str[strOffset + read];
 				// Check for a matching character
 				match = false;
 				if((c >= lowerBound1 && c <= upperBound1) ||
@@ -491,6 +490,7 @@ public final class ReadRepeats {
 					for(int i = offset; i < totalLength; i++) {
 						if(c == ch[i]) {
 							match = true;
+							break;
 						}
 					}
 				}
@@ -514,12 +514,12 @@ public final class ReadRepeats {
 	}
 
 
-	public static final int skipRepeat(final char[] str, final int strOffset, final char[] ch, final int max) {
+	public static int skipRepeat(final char[] str, final int strOffset, final char[] ch, final int max) {
 		return skipRepeat(str, strOffset, str.length - strOffset, ch, 0, ch.length, max);
 	}
 
 
-	public static final int skipRepeat(final char[] str, final int strOffset, final int strLength,
+	public static int skipRepeat(final char[] str, final int strOffset, final int strLength,
 			final char[] ch, final int chOff, final int chLen, final int max) {
 		if(strOffset + strLength > str.length || strOffset >= str.length || strLength < 0) { return 0; }
 		int read = 0;

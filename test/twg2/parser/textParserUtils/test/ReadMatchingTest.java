@@ -12,7 +12,6 @@ import twg2.parser.textParser.TextIteratorParser;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadUnescape;
 import twg2.parser.textParserUtils.SearchRange;
-import twg2.text.test.DataUnescapePartialQuoted;
 
 /**
  * @author TeamworkGuy2
@@ -21,82 +20,7 @@ import twg2.text.test.DataUnescapePartialQuoted;
 public class ReadMatchingTest {
 
 	@Test
-	public void testReadUnescapePartialQuoted() {
-		String[] inputs = {
-				"key: \"value, (stuff)",
-				"key: \"value, (stuff)\", mk",
-				"\"value, a\"",
-				"\"value, a\") A",
-				"\"a, b)",
-				"\"a, b) A",
-				"a, b)",
-				"a\\, b)"
-		};
-		String[] expected = {
-				"key: \"value, (stuff)",
-				"key: \"value, (stuff)\"",
-				"\"value, a\"",
-				"\"value, a\"",
-				"\"a, b)",
-				"\"a, b) A",
-				"a",
-				"a\\"
-		};
-
-		CheckTask.assertTests(inputs, expected, (String str) -> {
-			StringBuilder strB = new StringBuilder();
-			TextIteratorParser in = TextIteratorParser.of(str);
-
-			ReadUnescape.readUnescapePartialQuoted(in, '"', '\\', ',', ')', true, '\n', strB);
-			String res = strB.toString();
-			strB.setLength(0);
-
-			return res;
-		});
-	}
-
-
-	@Test
-	public void testReadUnescapePartialQuoted2() {
-		int offset = DataUnescapePartialQuoted.inputsOffset;
-		List<String> inputs = DataUnescapePartialQuoted.inputs;
-		List<String> expect = DataUnescapePartialQuoted.expected;
-		List<Integer> expectIdxs = DataUnescapePartialQuoted.expectedIndexesIncludingTrueEndingChar;
-		StringBuilder dst = new StringBuilder();
-
-		for(int i = 0, size = inputs.size(); i < size; i++) {
-			StringBuilder strB = new StringBuilder();
-			TextIteratorParser in = TextIteratorParser.of(inputs.get(i), offset, inputs.get(i).length() - offset);
-
-			// TODO also check the return count from readUnescapePartialQuoted()
-			ReadUnescape.Default.readUnescapePartialQuoted(in, '"', '\\', ',', ']', strB);
-
-			int index = in.getPosition();
-			Assert.assertEquals(expect.get(i), strB.toString());
-			Assert.assertEquals(i + ". expect (" + expectIdxs.get(i) + "): " + expect.get(i) + ", result (" + index + "): " + strB.toString(), (int)expectIdxs.get(i), index + offset + 1);
-			dst.setLength(0);
-		}
-	}
-
-
-	@Test
-	public void readUnescapePartialFailTests() {
-		int i = 0;
-		for(String errInput : DataUnescapePartialQuoted.inputsNoClosingQuote) {
-			//String expect = DataUnescapePartialQuoted.expectedNoClosingQuote.get(i);
-			CheckTask.assertException("(" + i + ") " + errInput, () -> {
-				StringBuilder strB = new StringBuilder();
-				TextIteratorParser in = TextIteratorParser.of(errInput, 0, errInput.length());
-
-				ReadUnescape.readUnescapePartialOrFullQuotedThrows(in, '"', '\\', ',', ']', false, (char)0, false, true, true, false, true, false, strB);
-			});
-			i++;
-		}
-	}
-
-
-	@Test
-	public void readCharMatchingTest() {
+	public void readCharMatchingStringTest() {
 		String lin = "1_2zthisat 1 with bcdw";
 
 		List<List<String>> strs = Arrays.asList(
@@ -118,7 +42,7 @@ public class ReadMatchingTest {
 		int k = 0;
 		while(k < lin.length()) {
 			//boolean found = TokenParser.searchStartsWith(strs, strB, k);
-			ReadMatching.FromString.readCharsMatching(lin, k, strs.get(i), chars[i], strB);
+			ReadMatching.readCharsMatching(lin, k, strs.get(i), chars[i], strB);
 			Assert.assertEquals(expect[i], strB.toString());
 
 			k += (strB.length() > 0 ? strB.length() : 1);
@@ -129,7 +53,30 @@ public class ReadMatchingTest {
 
 
 	@Test
-	public void testParseArrayLike() {
+	public void readCharMatchingCharTest() {
+		StringBuilder dst = new StringBuilder();
+
+		ReadMatching.readCharsMatching("https", 0, of('h', 't', 'p'), dst);
+		Assert.assertEquals("http", dst.toString());
+		dst.setLength(0);
+
+		ReadMatching.readCharsMatching("https", 0, of('a', 'b', 'c'), dst);
+		Assert.assertEquals("", dst.toString());
+		dst.setLength(0);
+	}
+
+
+	@Test
+	public void readTest() {
+		StringBuilder dst = new StringBuilder();
+		assertBufferRead(5, "alpha", dst, ReadMatching.read(chars("# alpha omega"), 2, Character::isAlphabetic, 5, dst));
+		assertBufferRead(4, "1_2f", dst, ReadMatching.read(chars("# 1_2f"), 2, Character::isJavaIdentifierPart, 99, dst));
+		assertBufferRead(0, "", dst, ReadMatching.read(chars(" A "), 0, Character::isJavaIdentifierPart, 5, dst));
+	}
+
+
+	@Test
+	public void parseArrayLikeTest() {
 		String[] inputs = {
 				"\"abc\",\"1.2\",alpha omega, a \"b c\"",
 				"stuff,1.2.3 , 010\"11\"]"
@@ -147,7 +94,7 @@ public class ReadMatchingTest {
 			List<String> parsedElems = new ArrayList<>();
 
 			while(in.hasNext()) {
-				ReadUnescape.Default.readUnescapePartialQuoted(in, '"', '\\', ',', ']', sb);
+				ReadUnescape.readUnescapePartialQuoted(in, '"', '\\', ',', ']', sb);
 				parsedElems.add(sb.toString());
 
 				in.nextIf(',', ']', sb);
@@ -171,20 +118,20 @@ public class ReadMatchingTest {
 
 		range.reset(5);
 		StringBuilder searchSb = new StringBuilder("Bill");
-		Assert.assertEquals(1, ReadMatching.binaryStartsWith(range, strs, searchSb));
+		Assert.assertEquals(1, ReadMatching.binaryStartsWith(range, strs, searchSb, 0));
 
 		range.reset(5);
 		searchSb = new StringBuilder("D");
-		Assert.assertEquals(-4, ReadMatching.binaryStartsWith(range, strs, searchSb));
+		Assert.assertEquals(-4, ReadMatching.binaryStartsWith(range, strs, searchSb, 0));
 
 		range.reset(5);
 		searchSb = new StringBuilder("Xyz");
-		Assert.assertEquals(-6, ReadMatching.binaryStartsWith(range, strs, searchSb));
+		Assert.assertEquals(-6, ReadMatching.binaryStartsWith(range, strs, searchSb, 0));
 	}
 
 
 	@Test
-	public void testReadUnescapePartialOrFullQuotedThrows() {
+	public void readUnescapePartialOrFullQuotedThrowsTest() {
 		final boolean appendEndChar = false;
 		final boolean dropEscChars = true;
 		final boolean throwIfQuotedNoStartQuote = true;
@@ -251,6 +198,23 @@ public class ReadMatchingTest {
 			task.run();
 			Assert.assertEquals(expected, strB.toString());
 		}
+	}
+
+
+	private static void assertBufferRead(int expectedCount, String expectedStr, StringBuilder resultBuf, int actualCount) {
+		Assert.assertEquals(expectedCount, actualCount);
+		Assert.assertEquals(expectedStr, resultBuf.toString());
+		resultBuf.setLength(0);
+	}
+
+
+	private static char[] chars(String src) {
+		return src.toCharArray();
+	}
+
+
+	private static char[] of(char... cs) {
+		return cs;
 	}
 
 }

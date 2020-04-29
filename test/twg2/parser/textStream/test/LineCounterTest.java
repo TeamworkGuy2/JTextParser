@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import twg2.collections.primitiveCollections.IntListSorted;
+import twg2.junitassist.checks.CheckTask;
 import twg2.parser.textStream.LineCounter;
 
 /**
@@ -26,7 +27,7 @@ public class LineCounterTest {
 
 
 	@Test
-	public void rewind() {
+	public void unread() {
 		char[] chs = (
 			"start" + "\n" + // 6 chars
 			"A. len 11" + "\r\n" + // 11 chars
@@ -46,6 +47,7 @@ public class LineCounterTest {
 		Assert.assertEquals(0, lc.getLineNumber());
 		lc.read('_');
 		Assert.assertEquals(1, lc.getLineNumber());
+		CheckTask.assertException(() -> lc.unread(99));
 	}
 
 

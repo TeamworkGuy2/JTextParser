@@ -23,7 +23,7 @@ public class ReadCharCategoryTest {
 				CharCategory.DIGIT,
 				CharCategory.ALPHA_UPPER_OR_LOWER
 		};
-		String[] strs = new String[] {
+		String[] strs = {
 				"characterswithoutspaces",
 				"ALPHAUPPERCHARACTHERS",
 				"with spaces",
@@ -31,7 +31,7 @@ public class ReadCharCategoryTest {
 				"7252_312",
 				"AlphaWITHlowerCase"
 		};
-		String[] expect = new String[] {
+		String[] expect = {
 				"characterswithoutspaces",
 				"ALPHAUPPERCHARACTHERS",
 				"with",

@@ -169,10 +169,9 @@ public class ReadIsMatching {
 
 	/** Read as many characters as match, up to {@code count}, from the current line
 	 * until a {@code endCh} is encountered, only if it is not proceeded by {@code escCh}
-	 * @param dropEscChars true to not append escape characters to {@code dst}, false add all matching characters to dst
 	 */
-	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, boolean dropEscChars, int count) {
-		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, dropEscChars, count, null);
+	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, int count) {
+		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, false, count, null);
 		in.unread(foundCount);
 		return foundCount == count;
 	}
@@ -181,10 +180,9 @@ public class ReadIsMatching {
 	/** Read as many characters as match, up to {@code count}, from the current line
 	 * until a {@code endCh} is encountered, only if it is not proceeded by {@code escCh}
 	 * or until {@code stopCh} is encountered regardless of preceding character
-	 * @param dropEscChars true to not append escape characters to {@code dst}, false add all matching characters to dst
 	 */
-	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh, boolean dropEscChars, int count) {
-		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh, dropEscChars, count, null);
+	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh, int count) {
+		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh, false, count, null);
 		in.unread(foundCount);
 		return foundCount == count;
 	}
@@ -192,8 +190,8 @@ public class ReadIsMatching {
 
 	/** {@link ReadIsMatching#isNextNotPrecededBy(TextParser, char, char, char, boolean, int)}
 	 */
-	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh1, char stopCh2, boolean dropEscChars, int count) {
-		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh1, stopCh2, dropEscChars, count, null);
+	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh1, char stopCh2, int count) {
+		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh1, stopCh2, false, count, null);
 		in.unread(foundCount);
 		return foundCount == count;
 	}
@@ -201,8 +199,8 @@ public class ReadIsMatching {
 
 	/** {@link ReadIsMatching#isNextNotPrecededBy(TextParser, char, char, char, boolean, int)}
 	 */
-	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh1, char stopCh2, char stopCh3, boolean dropEscChars, int count) {
-		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh1, stopCh2, stopCh3, dropEscChars, count, null);
+	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh1, char stopCh2, char stopCh3, int count) {
+		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh1, stopCh2, stopCh3, false, count, null);
 		in.unread(foundCount);
 		return foundCount == count;
 	}

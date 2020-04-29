@@ -12,7 +12,6 @@ import twg2.parser.textParser.TextIteratorParser;
 import twg2.parser.textParser.TextParser;
 import twg2.parser.textParser.TextParserConditionalsDefault;
 import twg2.parser.textParserUtils.ReadMatching;
-import twg2.parser.textParserUtils.ReadPeek;
 
 public class TextParserTest {
 
@@ -144,25 +143,51 @@ public class TextParserTest {
 		String str =
 			"\tstring a\n" +
 			"\tstring b\n" +
-			"\n" +
-			"3";
+			"3\n";
 		TextParser buf = parserFactory.apply(str);
 
+		Assert.assertFalse(buf.hasPrevChar());
 		Assert.assertEquals(offset - 1, buf.getPosition());
 		buf.hasNext();
-		char ch = buf.nextChar();
-		Assert.assertEquals(str.charAt(0), ch);
+		Assert.assertEquals('\t', buf.nextChar());
+		Assert.assertFalse(buf.hasPrevChar());
 		Assert.assertEquals(offset + 0, buf.getPosition());
 		Assert.assertEquals(1, buf.getLineNumber());
 		Assert.assertEquals(1, buf.getColumnNumber());
 
 		String line = buf.readLine();
 		Assert.assertEquals("string a", line);
-		ch = buf.nextChar();
-		Assert.assertEquals('\t', ch);
-		Assert.assertEquals(offset + 10, buf.getPosition());
+		Assert.assertEquals('\t', buf.nextChar());
 		Assert.assertEquals(2, buf.getLineNumber());
+		buf.skip(7);
+		Assert.assertTrue(buf.hasPrevChar());
+		Assert.assertEquals('g', buf.prevChar());
+		Assert.assertEquals('b', buf.nextChar());
+		buf.unread(2);
+		Assert.assertEquals(' ', buf.nextChar());
+		buf.skip(1);
+		Assert.assertEquals(offset + 18, buf.getPosition());
+		Assert.assertEquals(2, buf.getLineNumber());
+		Assert.assertEquals(9, buf.getColumnNumber());
+
+		Assert.assertEquals('\n', buf.nextChar());
+		Assert.assertEquals('3', buf.nextChar());
+		Assert.assertEquals(3, buf.getLineNumber());
 		Assert.assertEquals(1, buf.getColumnNumber());
+
+		var success = false;
+		try {
+			buf.unread(2);
+			success = true;
+		} catch(Exception e) {
+			// not supported by TextIteratorParser
+		}
+		if(success) {
+			Assert.assertEquals('\n', buf.nextChar());
+			Assert.assertEquals('3', buf.nextChar());
+			Assert.assertEquals(3, buf.getLineNumber());
+			Assert.assertEquals(1, buf.getColumnNumber());
+		}
 	}
 
 
@@ -173,26 +198,21 @@ public class TextParserTest {
 
 
 	public void readLineTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
-		TextParser buf = parserFactory.apply(
-			"\tstring a\n" +
-			"\tstring b\n" +
-			"\n" +
-			"3"
-		);
 		String[] expect = {
 				"\tstring a",
 				"\tstring b",
 				"",
 				"3"
 		};
+		TextParser buf = parserFactory.apply(String.join("\n", expect));
 
-		StringBuilder strB = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		while(buf.hasNext()) {
-			buf.readLine(strB);
+			buf.readLine(sb);
 
-			Assert.assertEquals("lines not equal", expect[i], strB.toString());
-			strB.setLength(0);
+			Assert.assertEquals("lines not equal", expect[i], sb.toString());
+			sb.setLength(0);
 			i++;
 		}
 	}
@@ -206,19 +226,20 @@ public class TextParserTest {
 
 	public void readLinesTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
 		{
-			TextIteratorParser buf = TextIteratorParser.of("\tstring a\n\tstring b\n3");
 			String[] expect = {
 					"\tstring a\n",
 					"\tstring b\n",
 					"3"
 			};
-			StringBuilder strB = new StringBuilder();
+			TextIteratorParser buf = TextIteratorParser.of(String.join("", expect));
+
+			StringBuilder sb = new StringBuilder();
 			int i = 0;
 			while(buf.hasNext()) {
-				strB.append(buf.nextChar());
+				sb.append(buf.nextChar());
 				if(buf.getLineRemaining() == 0) {
-					Assert.assertEquals("lines not equal", expect[i], strB.toString());
-					strB.setLength(0);
+					Assert.assertEquals("lines not equal", expect[i], sb.toString());
+					sb.setLength(0);
 					i++;
 				}
 			}
@@ -239,22 +260,21 @@ public class TextParserTest {
 
 	@Test
 	public void lineReminaingTest() {
-		TextIteratorParser buf = TextIteratorParser.of("\tstring a\nabc\n3");
 		String[] expect = {
 				"\tstring a\n",
 				"abc\n",
 				"3"
 		};
+		TextIteratorParser buf = TextIteratorParser.of(String.join("", expect));
 
 		int i = 0;
 		while(buf.hasNext()) {
 			int charI = 0;
 			int curLineLen = expect[i].length();
-			@SuppressWarnings("unused")
-			int remaining = -1;
 			// peek ahead to initialize the next line, because getLineRemaining() == 0 until some call advances the line buffer to the next line
-			ReadPeek.peekNext(buf);
-			while((remaining = buf.getLineRemaining()) > 0) {
+			buf.nextChar();
+			buf.unread(1);
+			while(buf.getLineRemaining() > 0) {
 				Assert.assertEquals(curLineLen - charI, buf.getLineRemaining());
 				buf.nextChar();
 				charI++;
@@ -272,21 +292,28 @@ public class TextParserTest {
 
 
 	public void readNextBetweenTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
-		TextParserConditionalsDefault buf = parserFactory.apply("123 123");
+		TextParserConditionalsDefault buf;
 		StringBuilder sb = new StringBuilder();
 
+		buf = parserFactory.apply("123 123");
 		buf.nextBetween('0', '9', 5, sb);
 		Assert.assertEquals("123", sb.toString());
+		buf.unread(buf.getPosition() - offset + 1);
+		Assert.assertEquals(3, buf.nextBetween('0', '9', 5, null));
 		sb.setLength(0);
 
 		buf = parserFactory.apply("a1b2cc3 4d");
 		buf.nextBetween('0', '9', 'a', 'z', 5, sb);
 		Assert.assertEquals("a1b2c", sb.toString());
+		buf.unread(buf.getPosition() - offset + 1);
+		Assert.assertEquals(5, buf.nextBetween('0', '9', 'a', 'z', 5, null));
 		sb.setLength(0);
 
 		buf = parserFactory.apply("a1b2cc3 4d");
 		buf.nextBetween('0', '9', 'a', 'z', 10, sb);
 		Assert.assertEquals("a1b2cc3", sb.toString());
+		buf.unread(buf.getPosition() - offset + 1);
+		Assert.assertEquals(7, buf.nextBetween('0', '9', 'a', 'z', 10, null));
 		sb.setLength(0);
 	}
 
@@ -316,7 +343,12 @@ public class TextParserTest {
 			"a"
 		};
 
-		CheckTask.assertTests(inputs, expectNotEscaped, createReadNextIfNotPrecededByTask1(parserFactory, endCh, escCh, stopCh, false));
+		CheckTask.assertTests(inputs, expectNotEscaped, (str) -> {
+			StringBuilder sb = new StringBuilder();
+			TextParser buf = parserFactory.apply(str);
+			buf.nextIfNotPrecededBy(endCh, escCh, stopCh, false, 0, sb);
+			return sb.toString();
+		});
 
 		String[] expectEscaped = {
 			"a ",
@@ -325,17 +357,12 @@ public class TextParserTest {
 			"a"
 		};
 
-		CheckTask.assertTests(inputs, expectEscaped, createReadNextIfNotPrecededByTask1(parserFactory, endCh, escCh, stopCh, true));
-	}
-
-
-	private Function<String, String> createReadNextIfNotPrecededByTask1(Function<String, TextParserConditionalsDefault> parserFactory, char endChar, char escChar, char stopChar, boolean dropEscChar) {
-		return (str) -> {
+		CheckTask.assertTests(inputs, expectEscaped, (str) -> {
 			TextParser buf = parserFactory.apply(str);
-			StringBuilder strB = new StringBuilder();
-			buf.nextIfNotPrecededBy(endChar, escChar, stopChar, dropEscChar, 0, strB);
-			return strB.toString();
-		};
+			StringBuilder sb = new StringBuilder();
+			buf.nextIfNotPrecededBy(endCh, escCh, stopCh, true, 0, sb);
+			return sb.toString();
+		});
 	}
 
 

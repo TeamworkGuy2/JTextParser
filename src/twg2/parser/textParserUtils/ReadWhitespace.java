@@ -3,13 +3,13 @@ package twg2.parser.textParserUtils;
 import twg2.parser.textParser.TextParser;
 import twg2.text.stringUtils.StringCheck;
 
-/** A tool for parsing specified characters from a line buffer
+/** Static methods for reading whitespace characters from a string or {@link TextParser}
  * @author TeamworkGuy2
  * @since 2014-8-23
  */
 public final class ReadWhitespace {
 
-	public ReadWhitespace() { throw new AssertionError("cannot instantiate static class ReadWhitespace"); }
+	private ReadWhitespace() { throw new AssertionError("cannot instantiate static class ReadWhitespace"); }
 
 
 	/** Count the number of contiguous characters matching {@link StringCheck#SIMPLE_WHITESPACE}
@@ -68,8 +68,8 @@ public final class ReadWhitespace {
 	}
 
 
-	/** Count the number of contiguous whitespace characters in a string starting
-	 * from a offset
+	/** Count the number of contiguous whitespace characters (based on {@link Character#isWhitespace(char)}
+	 * in a string starting from an offset
 	 * @param str the string to read whitespace characters from
 	 * @param offset the offset into the string at which to start
 	 * checking for whitespace characters
@@ -96,7 +96,7 @@ public final class ReadWhitespace {
 
 
 	/** Count the number of contiguous whitespace characters in a {@link TextParser}
-	 * starting from a offset.
+	 * starting from an offset.
 	 * Read new lines if the whitespace sequence extends to the end of the line and {@code max}
 	 * characters have not been read
 	 * @param in the {@link TextParser} to read whitespace characters from
