@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.PushbackReader;
 
-/** A buffered reader like class that reads lines and also allows the last line
- * to be fully or partially unread.
+/** A buffered text reader that tracks position, line number, and column offset.
+ * Also allows the current line to be fully or partially unread.
  * @see PushbackReader
  * @see BufferedReader
  * @author TeamworkGuy2
@@ -66,15 +66,15 @@ public interface LineReader extends Closeable, ParserPos {
 	public boolean hasNext();
 
 
-	/** Read the next character from the line
+	/** Read the next character
 	 * @return the next character
-	 * @throws IndexOutOfBoundsException if the end of the line has been reached
+	 * @throws IndexOutOfBoundsException if the end of the buffer has been reached, check for this condition with {@link #hasNext()}
 	 */
 	public char nextChar();
 
 
 	/**
-	 * @return true if this line has a previous character, false if not
+	 * @return true if the current line has a previous character, false if not
 	 */
 	public boolean hasPrevChar();
 

@@ -175,7 +175,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 				readI++;
 			}
 		}
-		return count;
+		return readI;
 	}
 
 

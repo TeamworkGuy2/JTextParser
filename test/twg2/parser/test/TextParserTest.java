@@ -225,36 +225,12 @@ public class TextParserTest {
 
 
 	public void readLinesTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
-		{
-			String[] expect = {
-					"\tstring a\n",
-					"\tstring b\n",
-					"3"
-			};
-			TextIteratorParser buf = TextIteratorParser.of(String.join("", expect));
-
-			StringBuilder sb = new StringBuilder();
-			int i = 0;
-			while(buf.hasNext()) {
-				sb.append(buf.nextChar());
-				if(buf.getLineRemaining() == 0) {
-					Assert.assertEquals("lines not equal", expect[i], sb.toString());
-					sb.setLength(0);
-					i++;
-				}
-			}
+		TextParser buf = parserFactory.apply("\n\n\n");
+		StringBuilder sb = new StringBuilder();
+		while(buf.hasNext()) {
+			sb.append(buf.nextChar());
 		}
-
-		{
-			TextParser buf = parserFactory.apply("\n\n\n");
-			String expect = "\n\n\n";
-			StringBuilder strB = new StringBuilder();
-			while(buf.hasNext()) {
-				char ch = buf.nextChar();
-				strB.append(ch);
-			}
-			Assert.assertEquals("lines not equal", expect, strB.toString());
-		}
+		Assert.assertEquals("lines not equal", "\n\n\n", sb.toString());
 	}
 
 
@@ -281,7 +257,33 @@ public class TextParserTest {
 			}
 			i++;
 		}
+	}
 
+
+	@Test
+	public void readCountTest() {
+		runTests(this::readCountTest);
+	}
+
+
+	public void readCountTest(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
+		String[] expect = {
+				"boolean a\n",
+				"int b\n",
+				"3"
+		};
+		TextParserConditionalsDefault buf = parserFactory.apply(String.join("", expect));
+
+		StringBuilder sb = new StringBuilder();
+		buf.nextChar();
+		Assert.assertEquals(9, buf.readCount(9, sb)); // TODO TextIteratorParse can't read past new lines
+		Assert.assertEquals("oolean a\n", sb.toString());
+		buf.nextChar();
+		Assert.assertEquals(5, buf.readCount(5, sb));
+		Assert.assertEquals("oolean a\nnt b\n", sb.toString());
+		buf.nextChar();
+		Assert.assertEquals(0, buf.readCount(99, sb));
+		Assert.assertEquals("oolean a\nnt b\n", sb.toString());
 	}
 
 

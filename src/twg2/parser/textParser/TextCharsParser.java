@@ -136,7 +136,7 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 				readI++;
 			}
 		}
-		return count;
+		return readI;
 	}
 
 

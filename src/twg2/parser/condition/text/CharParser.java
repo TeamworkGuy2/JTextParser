@@ -62,11 +62,21 @@ public interface CharParser extends ParserCondition {
 	}
 
 
+	/**
+	 * @see #readConditional(TextParser, StringBuilder)
+	 */
 	public default boolean readConditional(TextParser buf) {
 		return readConditional(buf, null);
 	}
 
 
+	/** Read a {@link TextParser} until it {@link #isComplete()} or until {@link #acceptNext(char, TextParser)} returns false.
+	 * The {@code dst} buffer is filled with the accepted input if a complete token is read. The input {@code buf} and {@code dst}
+	 * buffer are reset to their initial position and length if a complete token is not found.
+	 * @param buf the {@link TextParser} to read input from
+	 * @param dst the destination buffer to store matched input in
+	 * @return true if a complete token is read, false if not
+	 */
 	public default boolean readConditional(TextParser buf, StringBuilder dst) {
 		int off = dst != null ? dst.length() : 0;
 		int count = 0;

@@ -4,7 +4,20 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.14.0](N/A) - 2020-04-28
+### [0.15.0](N/A) - 2020-05-03
+#### Changed
+* Added documentation to several methods
+
+#### Fixed
+* `readCount()` implementation in both `TextCharsParser` and `TextIteratorParser`
+
+#### Removed
+* Removed unused `twg2.parser.ParseConstants`, contained two static char arrays
+* Moved `twg2.parser.Inclusion` to `JTextTokenizer` library
+
+
+--------
+### [0.14.0](https://github.com/TeamworkGuy2/JTextParser/commit/06ef2ad386893405f95e60ce9095259c1c0b68f8) - 2020-04-28
 #### Changed
 * Removed unnecessary `dropEscChars` parameter from several `ReadIsMatching` methods
 * `ReadMatching.FromString` inner class static methods flattened into parent `ReadMatching` class

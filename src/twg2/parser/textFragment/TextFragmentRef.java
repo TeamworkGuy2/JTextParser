@@ -95,11 +95,16 @@ public interface TextFragmentRef {
 	public String toString();
 
 
+	/** Equivalent to 'chseq' {@link CharSequence#subSequence(int, int)}
+	 */
 	static CharSequence getText(int offsetStart, int offsetEnd, CharSequence chseq) {
 		return chseq.subSequence(offsetStart, offsetEnd);
 	}
 
 
+	/** Get a sub-string specified by offset and length from a char array
+	 * @see #getText(int, char[], int, int)
+	 */
 	static String getText(int baseOffset, char[] chars, int offset, int length, int offsetStart, int offsetEnd) {
 		// example for calculating source document vs chars with baseOffset=5 and a fragment
 		// doc  0 [ . . . . . . ] 100
@@ -113,14 +118,14 @@ public interface TextFragmentRef {
 	}
 
 
-	/**
-	 * @param offsetStart - inclusive
-	 * @param offsetEnd - exclusive
-	 * @param lineStart - inclusive
-	 * @param lineEnd - inclusive
-	 * @param columnStart - inclusive
-	 * @param columnEnd - inclusive
-	 * @param lines
+	/** Extract a sub-string represented by fragment line/column offset and length from a list of strings
+	 * @param offsetStart inclusive absolute offset
+	 * @param offsetEnd exclusive absolute end index
+	 * @param lineStart inclusive starting line number (0-based)
+	 * @param lineEnd inclusive ending line number (0-based)
+	 * @param columnStart inclusive starting column number (0-based)
+	 * @param columnEnd inclusive ending column number (0-based)
+	 * @param lines list of lines which contain the full text
 	 * @return the text sub-string represented by the offsets, line, and column numbers provided
 	 */
 	public static CharSequence getText(int offsetStart, int offsetEnd, int lineStart, int lineEnd, int columnStart, int columnEnd, List<? extends CharSequence> lines) {

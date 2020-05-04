@@ -71,6 +71,8 @@ public interface TextParserConditionals {
 	public int nextIf(char[] chars, Appendable dst);
 
 
+	/** {@link #nextIf(char[], Appendable)}
+	 */
 	public int nextIf(char[] chars, int off, int len, Appendable dst);
 
 
@@ -84,6 +86,8 @@ public interface TextParserConditionals {
 	public int nextIf(char[] chars, int count, Appendable dst);
 
 
+	/** {@link #nextIf(char[], int, Appendable)}
+	 */
 	public int nextIf(char[] chars, int off, int len, int count, Appendable dst);
 
 
@@ -158,6 +162,8 @@ public interface TextParserConditionals {
 	public int nextIfNot(char[] chars, int count, Appendable dst);
 
 
+	/** {@link #nextIfNot(char[], int, Appendable)}
+	 */
 	public int nextIfNot(char[] chars, int off, int len, int count, Appendable dst);
 
 
