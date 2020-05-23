@@ -1,15 +1,14 @@
 package twg2.parser.textFragment;
 
-/** Consumer function which accepts a full text blob and indexes of a matched sub-portion of the string
+/** Consumer function which accepts coordinates (offset, length, line number and column number) of a sub-string
  * @see TextTransformer
  * @author TeamworkGuy2
  * @since 2015-5-27
  */
 @FunctionalInterface
-public interface TextConsumer {
+public interface TextFragmentConsumer {
 
-	/**
-	 * @param text the text fragment. This value is already a sub-string, {@code off} and {@code len} should not be applied to it.
+	/** Receives coordinates for a text sub-string
 	 * @param off 0 based absolute offset of the text fragment
 	 * @param len length of the text fragment in characters
 	 * @param lineStart the starting line number, 0 based
@@ -17,6 +16,6 @@ public interface TextConsumer {
 	 * @param lineEnd the ending line number, inclusive, 0 based
 	 * @param columnEnd the ending line offset, inclusive, 0 based
 	 */
-	public void accept(CharSequence text, int off, int len, int lineStart, int columnStart, int lineEnd, int columnEnd);
+	public void accept(int off, int len, int lineStart, int columnStart, int lineEnd, int columnEnd);
 
 }

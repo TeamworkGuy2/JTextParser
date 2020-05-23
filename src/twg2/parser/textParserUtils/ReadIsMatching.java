@@ -40,7 +40,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNext(TextParser in, char ch, int count) {
 		int foundCount = in.nextIf(ch, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -54,7 +54,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNext(TextParser in, char ch, char ch2, int count) {
 		int foundCount = in.nextIf(ch, ch2, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -67,14 +67,14 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNext(TextParser in ,char[] chars, int count) {
 		int foundCount = in.nextIf(chars, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
 
 	public static boolean isNext(TextParser in, char[] chars, int off, int len, int count) {
 		int foundCount = in.nextIf(chars, off, len, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -87,7 +87,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNext(TextParser in, CharCategory type, int count) {
 		int foundCount = in.nextIf(type, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -100,7 +100,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNext(TextParser in, CharPredicate condition, int count) {
 		int foundCount = in.nextIf(condition, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -113,7 +113,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNot(TextParser in, char ch, int count) {
 		int foundCount = in.nextIfNot(ch, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -127,7 +127,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNot(TextParser in, char ch, char ch2, int count) {
 		int foundCount = in.nextIfNot(ch, ch2, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -142,7 +142,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNot(TextParser in, char ch, char ch2, char ch3, int count) {
 		int foundCount = in.nextIfNot(ch, ch2, ch3, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -155,14 +155,14 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNot(TextParser in, char[] chars, int count) {
 		int foundCount = in.nextIfNot(chars, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
 
 	public static boolean isNextNot(TextParser in, char[] chars, int off, int len, int count) {
 		int foundCount = in.nextIfNot(chars, off, len, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -172,7 +172,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, int count) {
 		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, false, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -183,7 +183,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh, int count) {
 		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh, false, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -192,7 +192,7 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh1, char stopCh2, int count) {
 		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh1, stopCh2, false, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
@@ -201,14 +201,14 @@ public class ReadIsMatching {
 	 */
 	public static boolean isNextNotPrecededBy(TextParser in, char endCh, char escCh, char stopCh1, char stopCh2, char stopCh3, int count) {
 		int foundCount = in.nextIfNotPrecededBy(endCh, escCh, stopCh1, stopCh2, stopCh3, false, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 
 
 	public static boolean isNextBetween(TextParser in, char lower, char upper, int count) {
 		int foundCount = in.nextBetween(lower, upper, count, null);
-		in.unread(foundCount);
+		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}
 

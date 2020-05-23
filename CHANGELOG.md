@@ -4,7 +4,17 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.15.0](N/A) - 2020-05-03
+### [0.16.0](N/A) - 2020-05-23
+#### Changed
+* Renamed `TextConsumer` to `TextFragmentConsumer` and removed the `text` parameter to allow underlying buffers and `getParserDestination()` to be removed for performance
+* `ReadIsMatching` methods now correctly skip calling `TextParser` `unread()` if no results were read
+
+#### Removed
+* Removed `CharParser` `getParserDestination()` and `setParserDestination()` in favor of the caller handling the source text and extracting sub-strings based on `getMatchedTextCoords()`, hopefully for more optimized implementations
+
+
+--------
+### [0.15.0](https://github.com/TeamworkGuy2/JTextParser/commit/847e1027b58b486a0bc9b0c1947d29bbd6ffbd24) - 2020-05-03
 #### Changed
 * Added documentation to several methods
 

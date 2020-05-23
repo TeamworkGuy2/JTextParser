@@ -27,18 +27,6 @@ public interface CharParser extends ParserCondition {
 	public TextFragmentRef getMatchedTextCoords();
 
 
-	/**
-	 * @return a {@link StringBuilder} containing all of the characters matched by {@link #acceptNext(char, TextParser)}
-	 */
-	public StringBuilder getParserDestination();
-
-
-	/** Set the destination buffer where {@link #acceptNext(char, TextParser)} stores matching characters
-	 * @param parserDestination the destination buffer to use
-	 */
-	public void setParserDestination(StringBuilder parserDestination);
-
-
 	@Override
 	public CharParser copy();
 

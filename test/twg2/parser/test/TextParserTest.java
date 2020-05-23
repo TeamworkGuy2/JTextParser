@@ -64,8 +64,86 @@ public class TextParserTest {
 
 		for(int i = 0, size = inputs.length; i < size; i++) {
 			TextParser in = parserFactory.apply(inputs[i]);
-			Assert.assertEquals("read matching string (index: " + i + ")", (expect[i].length() > 0), in.nextIf(match[i]));
-			Assert.assertEquals("next char does not match (index: " + i + ")", expectNext[i], (in.hasNext() ? in.nextChar() : 0));
+			Assert.assertEquals("i=" + i + ". read matching string", (expect[i].length() > 0), in.nextIf(match[i]));
+			Assert.assertEquals("i=" + i + ". next char does not match", expectNext[i], (in.hasNext() ? in.nextChar() : 0));
+		}
+	}
+
+
+	@Test
+	public void readMatchingChar() {
+		runTests(this::readMatchingChar);
+	}
+
+
+	public void readMatchingChar(Function<String, TextParserConditionalsDefault> parserFactory, int offset) {
+		int readLimit = 4;
+		String[] inputs = new String[] {
+				"Object a",
+				"ABAAA",
+				"ABBB",
+				"ABCACC",
+				"--.-..",
+				""
+		};
+		char[][] match = new char[][] {
+				{ 'O', 'b', 'j' },
+				{ 'A', 'B' },
+				{ 'A', 'B' },
+				{ 'A', 'B', 'C' },
+				{ '-' },
+				{ 'A' },
+		};
+		char[] expectLimitedNext = new char[] {
+				'e',
+				'A',
+				0,
+				'C',
+				'.',
+				0
+		};
+		String[] expectLimited = new String[] {
+				"Obj",
+				"ABAA",
+				"ABBB",
+				"ABCA",
+				"--",
+				""
+		};
+		String[] expect = new String[] {
+				"Obj",
+				"ABAAA",
+				"ABBB",
+				"ABCACC",
+				"--",
+				""
+		};
+		Assert.assertEquals(inputs.length, match.length);
+		Assert.assertEquals(inputs.length, expectLimitedNext.length);
+		Assert.assertEquals(inputs.length, expectLimited.length);
+		Assert.assertEquals(inputs.length, expect.length);
+
+		for(int i = 0, size = inputs.length; i < size; i++) {
+			// nextIf() limit
+			TextParser in = parserFactory.apply(inputs[i]);
+
+			int readRes = match[i].length == 1 ? in.nextIf(match[i][0], readLimit, null)
+					: match[i].length == 2 ? in.nextIf(match[i][0], match[i][1], readLimit, null)
+					: i % 2 == 0 ? in.nextIf(match[i], readLimit, null)
+					: in.nextIf(match[i], 0, match[i].length, readLimit, null);
+
+			Assert.assertEquals("i=" + i + ". read matching string", expectLimited[i].length(), readRes);
+			Assert.assertEquals("i=" + i + ". next char does not match", expectLimitedNext[i], (in.hasNext() ? in.nextChar() : 0));
+
+			// nextIf() unlimited
+			in = parserFactory.apply(inputs[i]);
+
+			readRes = match[i].length == 1 ? in.nextIf(match[i][0], 0, null)
+					: match[i].length == 2 ? in.nextIf(match[i][0], match[i][1], 0, null)
+					: i % 2 == 0 ? in.nextIf(match[i], 0, null)
+					: in.nextIf(match[i], 0, match[i].length, 0, null);
+
+			Assert.assertEquals("i=" + i + ". read matching string", expect[i].length(), readRes);
 		}
 	}
 
