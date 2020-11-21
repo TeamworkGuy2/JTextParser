@@ -4,7 +4,18 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.16.0](N/A) - 2020-05-23
+### [0.17.0](N/A) - 2020-11-21
+#### Added
+* `char[] getFirstChars()` to CharParserMatchable interface, implementations can return null, consumers can fall back on `getFirstCharMatcher()`. This is meant for certain performance optimizations.
+
+#### Changed
+* `LineSupplier` private fields changed to protected for easier sub-classing
+* Protected `LineSupplier.readCharsOrString()` changed to `readLineIntoBuffer()` with new parameter and return type (see method documentation)
+* Improved some documentation
+
+
+--------
+### [0.16.0](https://github.com/TeamworkGuy2/JTextParser/commit/09cd09c391cbf9e80545a3cb8e0eab2e43ea3e0f) - 2020-05-23
 #### Changed
 * Renamed `TextConsumer` to `TextFragmentConsumer` and removed the `text` parameter to allow underlying buffers and `getParserDestination()` to be removed for performance
 * `ReadIsMatching` methods now correctly skip calling `TextParser` `unread()` if no results were read

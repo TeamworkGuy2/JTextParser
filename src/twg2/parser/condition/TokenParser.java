@@ -1,6 +1,8 @@
 package twg2.parser.condition;
 
-/**
+/** A token parser, used to determine whether a series of input token match a requirement.<br>
+ * An instance of this interface must keep track of previous tokens passed to {@link #acceptNext(Object)}
+ * and return false once the set of tokens forms an invalid sequence.
  * @author TeamworkGuy2
  * @since 2015-12-12
  * @param <T_INPUT> the type of input tokens parsed by this parser
@@ -35,14 +37,12 @@ public interface TokenParser<T_INPUT, T_RESULT> extends ParserCondition {
 
 	@Override
 	public default TokenParser<T_INPUT, T_RESULT> copyOrReuse() {
-		TokenParser<T_INPUT, T_RESULT> filter = null;
 		if(this.canRecycle()) {
-			filter = this.recycle();
+			return this.recycle();
 		}
 		else {
-			filter = this.copy();
+			return this.copy();
 		}
-		return filter;
 	}
 
 }

@@ -199,26 +199,24 @@ public final class TextCharsParser implements TextParserConditionalsDefault, Tex
 	 * @see StringLineSupplier
 	 */
 	public static TextCharsParser of(String src) {
-		return TextCharsParser.of(src, 0, src.length());
+		return of(src, 0, src.length());
 	}
 
 
 	public static TextCharsParser of(String src, int off, int len) {
 		char[] chs = new char[len];
 		src.getChars(off, off + len, chs, 0);
-		TextCharsParser lineBuffer = new TextCharsParser(chs, 0, len);
-		return lineBuffer;
+		return new TextCharsParser(chs, 0, len);
 	}
 
 
 	public static TextCharsParser of(char[] src) {
-		return TextCharsParser.of(src, 0, src.length);
+		return of(src, 0, src.length);
 	}
 
 
 	public static TextCharsParser of(char[] src, int off, int len) {
-		TextCharsParser lineBuffer = new TextCharsParser(src, off, len);
-		return lineBuffer;
+		return new TextCharsParser(src, off, len);
 	}
 
 }

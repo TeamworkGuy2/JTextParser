@@ -1,10 +1,6 @@
 package twg2.parser.condition;
 
-/** A ParserFactory.<br>
- * This interface contains a factory method to create a {@link ParserCondition}
- * designed so implementers can create recyclable, precondition filters, managed by a factory,
- * to allow for faster parsers that produce less garbage.
- *
+/** This interface contains a factory method to create {@link ParserCondition} implementations.
  * @author TeamworkGuy2
  * @since 2015-2-9
  */

@@ -11,6 +11,9 @@ import java.util.List;
  */
 public interface ParserCondition {
 
+	/**
+	 * @return the name of this parser condition, for display and debugging purposes
+	 */
 	public String name();
 
 	/**

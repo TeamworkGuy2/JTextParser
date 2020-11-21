@@ -11,4 +11,10 @@ public interface CharParserMatchable extends CharParser {
 	 */
 	public CharParserPredicate getFirstCharMatcher();
 
+
+	/**
+	 * @return an array of chars which match the beginning of this parser or null if there is not a representative list of characters to match the beginning of this char parser
+	 */
+	public char[] getFirstChars();
+
 }

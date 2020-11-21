@@ -270,21 +270,11 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	}
 
 
-	// package-private
-	static char requireBmpChar(int codePoint) {
-		if(!Character.isBmpCodePoint(codePoint)) {
-			throw new IllegalArgumentException("character required, " + codePoint + " is not a valid 16-bit character, unicode 32-bit is not supported");
-		}
-		return (char)codePoint;
-	}
-
-
 	/** Create a line buffer with a {@link PeekableIterator} source
 	 * @param reader the peekable iterator to read the lines of text from
 	 */
 	public static TextIteratorParser fromStrings(PeekableIterator<String> reader) {
-		TextIteratorParser impl = new TextIteratorParser(reader, false);
-		return impl;
+		return new TextIteratorParser(reader, false);
 	}
 
 
@@ -293,8 +283,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	 * @param lastLineNum the starting line number of this line buffer
 	 */
 	public static TextIteratorParser fromStrings(PeekableIterator<String> reader, int lastLineNum) {
-		TextIteratorParser impl = new TextIteratorParser(reader, false, lastLineNum);
-		return impl;
+		return new TextIteratorParser(reader, false, lastLineNum);
 	}
 
 
@@ -302,8 +291,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	 * @param reader the peekable iterator to read the lines of text from
 	 */
 	public static TextIteratorParser fromCharArrays(PeekableIterator<char[]> reader) {
-		TextIteratorParser impl = new TextIteratorParser(reader, true);
-		return impl;
+		return new TextIteratorParser(reader, true);
 	}
 
 
@@ -312,8 +300,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	 * @param lastLineNum the starting line number of this line buffer
 	 */
 	public static TextIteratorParser fromCharArrays(PeekableIterator<char[]> reader, int lastLineNum) {
-		TextIteratorParser impl = new TextIteratorParser(reader, true, lastLineNum);
-		return impl;
+		return new TextIteratorParser(reader, true, lastLineNum);
 	}
 
 
@@ -328,7 +315,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	 * @see StringLineSupplier
 	 */
 	public static TextIteratorParser of(String src) {
-		return TextIteratorParser.of(src, 0, src.length(), true, true, true, true);
+		return of(src, 0, src.length(), true, true, true, true);
 	}
 
 
@@ -340,8 +327,7 @@ public final class TextIteratorParser implements TextParserConditionalsDefault, 
 	public static TextIteratorParser of(String src, int off, int len, boolean includeEmptyLines, boolean treatEolNewlineAsTwoLines, boolean includeNewlinesAtEndOfReturnedLines, boolean collapseNewlinesIntoOneChar) {
 		Supplier<String> lines = new StringLineSupplier(src, off, len, includeEmptyLines, treatEolNewlineAsTwoLines, includeNewlinesAtEndOfReturnedLines, collapseNewlinesIntoOneChar);
 		EnhancedIterator<String> lineReader = new EnhancedIterator<>(lines, null);
-		TextIteratorParser lineBuffer = new TextIteratorParser(lineReader, false);
-		return lineBuffer;
+		return new TextIteratorParser(lineReader, false);
 	}
 
 }
