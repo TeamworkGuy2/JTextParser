@@ -1,8 +1,6 @@
 package twg2.parser.textParser;
 
 import twg2.functions.predicates.CharPredicate;
-import twg2.ranges.helpers.CharCategory;
-
 
 /** The conditional read methods for a {@link TextParser}
  * @see TextParser
@@ -89,24 +87,6 @@ public interface TextParserConditionals {
 	/** {@link #nextIf(char[], int, Appendable)}
 	 */
 	public int nextIf(char[] chars, int off, int len, int count, Appendable dst);
-
-
-	/** Read the next character if the current character at the current line offset equals the specified character type
-	 * @param type the {@link CharCategory} of the characters to ready
-	 * @param dst the destination to store the read characters in
-	 * @return the number of character read
-	 */
-	public int nextIf(CharCategory type, Appendable dst);
-
-
-	/** Read the next character if the current character at the current line offset equals the specified character type
-	 * @param type the {@link CharCategory} of the characters to ready
-	 * @param count the maximum number of matching characters to read, or 0 to
-	 * read as many matching characters as possible
-	 * @param dst the destination to store the read characters in
-	 * @return the number of character read
-	 */
-	public int nextIf(CharCategory type, int count, Appendable dst);
 
 
 	/** Read as many characters as match, up to {@code count}, from the current line

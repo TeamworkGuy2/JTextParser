@@ -5,8 +5,6 @@ import java.io.UncheckedIOException;
 
 import twg2.arrays.ArrayUtil;
 import twg2.functions.predicates.CharPredicate;
-import twg2.ranges.CharSearcher;
-import twg2.ranges.helpers.CharCategory;
 
 /** Default implementations of the conditional {@code nextIf*()} methods in {@link TextParser}
  * @author TeamworkGuy2
@@ -361,19 +359,6 @@ public interface TextParserConditionalsDefault extends TextParser, TextParserCon
 		} catch(IOException e) {
 			throw new UncheckedIOException(e);
 		}
-	}
-
-
-	@Override
-	public default int nextIf(CharCategory type, Appendable dst) {
-		return nextIf(type, 0, dst);
-	}
-
-
-	@Override
-	public default int nextIf(CharCategory type, int count, Appendable dst) {
-		CharSearcher charSearchers = type.getCharCondition();
-		return nextIf(charSearchers::contains, count, dst);
 	}
 
 

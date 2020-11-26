@@ -1,7 +1,5 @@
 package twg2.parser.condition;
 
-import java.util.List;
-
 /** A token parser, used to determine whether a series of input token match a requirement.<br>
  * An instance of this interface must keep track of previous tokens passed to an 'accept' method implemented by sub-classes
  * and return false once the set of tokens forms an invalid sequence.
@@ -47,64 +45,19 @@ public interface ParserCondition {
 	 * Default interface method throws {@link UnsupportedOperationException}
 	 * @return This condition recycled back to its default state
 	 */
-	public default ParserCondition recycle() {
-		throw new UnsupportedOperationException("ParserCondition recycling not supported");
-	}
+	public ParserCondition recycle();
 
 
 	/** Based on {@link #canRecycle()}, return the result of {@link #recycle()} or {@link #copy()}
 	 * @return this condition, reset to its default state, or a new copy of this condition
 	 */
 	public default ParserCondition copyOrReuse() {
-		ParserCondition filter = null;
 		if(this.canRecycle()) {
-			filter = this.recycle();
+			return this.recycle();
 		}
 		else {
-			filter = this.copy();
+			return this.copy();
 		}
-		return filter;
-	}
-
-
-	public static boolean canRecycleAll(List<? extends ParserCondition> conds) {
-		for(int i = 0, size = conds.size(); i < size; i++) {
-			if(!conds.get(i).canRecycle()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-	public static boolean canRecycleAll(Iterable<? extends ParserCondition> conds) {
-		for(ParserCondition cond : conds) {
-			if(!cond.canRecycle()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-	@SafeVarargs
-	public static boolean canRecycleAll(ParserCondition... conds) {
-		for(ParserCondition cond : conds) {
-			if(!cond.canRecycle()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-	public static boolean canRecycleAll(ParserCondition[] conds, int off, int len) {
-		for(int i = off, size = off + len; i < size; i++) {
-			if(!conds[i].canRecycle()) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 }

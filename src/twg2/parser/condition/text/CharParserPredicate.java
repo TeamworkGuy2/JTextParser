@@ -14,7 +14,7 @@ public interface CharParserPredicate {
 	/** Check whether the current character (last call to {@link TextParser#nextChar()}) passes this condition
 	 * @param ch the character to test
 	 * @param parser the parser the character was read from
-	 * @return whether the character allowed by this condition
+	 * @return true if the character is accepted, false if not
 	 */
 	public boolean test(char ch, TextParser parser);
 

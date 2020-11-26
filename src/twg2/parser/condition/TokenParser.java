@@ -29,6 +29,10 @@ public interface TokenParser<T_INPUT, T_RESULT> extends ParserCondition {
 	public TokenParser<T_INPUT, T_RESULT> copy();
 
 
+	/** Recycle this condition. Resetting it back to its default state. 
+	 * Default interface method throws {@link UnsupportedOperationException}
+	 * @return This condition recycled back to its default state
+	 */
 	@Override
 	public default TokenParser<T_INPUT, T_RESULT> recycle() {
 		throw new UnsupportedOperationException("TokenParser recycling not supported");

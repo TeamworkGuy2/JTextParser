@@ -3,9 +3,9 @@ package twg2.parser.textParserUtils.test;
 import org.junit.Assert;
 import org.junit.Test;
 
+import twg2.functions.predicates.CharPredicate;
 import twg2.parser.textParser.TextCharsParser;
 import twg2.parser.textParserUtils.ReadIsMatching;
-import twg2.ranges.helpers.CharCategory;
 
 /**
  * @author TeamworkGuy2
@@ -15,6 +15,8 @@ public class ReadIsMatchingTest {
 
 	@Test
 	public void isNextTest() {
+		CharPredicate isWhitespace = (ch) -> ch == (char)32/*space (' ')*/ || ch == (char)9/*horizontal tab*/ || ch == (char)12/*form feed*/ || ch == (char)10/*line feed*/ || ch == (char)13/*carriage return*/;
+
 		Assert.assertTrue(ReadIsMatching.isNext(parser("abc"), 'a'));
 		Assert.assertTrue(ReadIsMatching.isNext(parser("abc"), 'a', 1));
 		Assert.assertTrue(ReadIsMatching.isNext(parser("www"), 'w'));
@@ -45,9 +47,9 @@ public class ReadIsMatchingTest {
 		Assert.assertFalse(ReadIsMatching.isNext(parser("abc"), of('a', 'b', 'c'), 4));
 		Assert.assertFalse(ReadIsMatching.isNext(parser("abc"), of('a', 'b', 'c'), 0, 2, 3));
 
-		Assert.assertTrue(ReadIsMatching.isNext(parser("1.2"), CharCategory.DIGIT, 1));
-		Assert.assertTrue(ReadIsMatching.isNext(parser("  A"), CharCategory.WHITESPACE, 2));
-		Assert.assertFalse(ReadIsMatching.isNext(parser("  A"), CharCategory.WHITESPACE, 3));
+		Assert.assertTrue(ReadIsMatching.isNext(parser("1.2"), (ch) -> ch >= '0' && ch <= '9', 1));
+		Assert.assertTrue(ReadIsMatching.isNext(parser("\t A"), isWhitespace, 2));
+		Assert.assertFalse(ReadIsMatching.isNext(parser("\t A"), isWhitespace, 3));
 
 		Assert.assertTrue(ReadIsMatching.isNext(parser("BDE"), (ch) -> (int)ch % 2 == 0, 2));
 		Assert.assertFalse(ReadIsMatching.isNext(parser("ABC"), (ch) -> false, 1));

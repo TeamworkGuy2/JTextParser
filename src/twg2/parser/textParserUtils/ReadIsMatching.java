@@ -2,7 +2,6 @@ package twg2.parser.textParserUtils;
 
 import twg2.functions.predicates.CharPredicate;
 import twg2.parser.textParser.TextParser;
-import twg2.ranges.helpers.CharCategory;
 
 /**
  * @author TeamworkGuy2
@@ -60,7 +59,7 @@ public class ReadIsMatching {
 
 
 	/** Read as many characters as match, up to {@code count} number of characters, from the current line
-	 * @param chars the list of valid characters that can be read
+	 * @param chars the array of valid characters that can be read
 	 * @param count the maximum number of matching characters to read, or 0 to
 	 * read as many matching characters as possible
 	 * @return the number of characters read
@@ -72,21 +71,16 @@ public class ReadIsMatching {
 	}
 
 
-	public static boolean isNext(TextParser in, char[] chars, int off, int len, int count) {
-		int foundCount = in.nextIf(chars, off, len, count, null);
-		if(foundCount > 0) in.unread(foundCount);
-		return foundCount == count;
-	}
-
-
-	/** Read the next character if the current character at the current line offset equals the specified character type
-	 * @param type the {@link CharCategory} of the characters to ready
+	/** Read as many characters as match, up to {@code count} number of characters, from the current line
+	 * @param chars the array of valid characters that can be read
+	 * @param off the offset into the {@code chars} array at which valid chars start
+	 * @param len the count of valid characters to use starting from {@code off} in the {@code chars} array
 	 * @param count the maximum number of matching characters to read, or 0 to
 	 * read as many matching characters as possible
-	 * @return the number of character read
+	 * @return the number of characters read
 	 */
-	public static boolean isNext(TextParser in, CharCategory type, int count) {
-		int foundCount = in.nextIf(type, count, null);
+	public static boolean isNext(TextParser in, char[] chars, int off, int len, int count) {
+		int foundCount = in.nextIf(chars, off, len, count, null);
 		if(foundCount > 0) in.unread(foundCount);
 		return foundCount == count;
 	}

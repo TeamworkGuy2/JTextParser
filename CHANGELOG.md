@@ -4,7 +4,23 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.17.0](N/A) - 2020-11-21
+### [0.18.0](N/A) - 2020-11-26
+#### `ParserFactory.returnParser(T)` interface default no-op method added, implementations are not required but it is available to override for performance optimizations
+
+#### Changed
+* `ParserCondition` `recycle()` default implementation removed, so implementors don't forget
+* `CharParser.readConditional()` default implementations adjusted to optimize for case with and without destination buffer
+* Documentation improvements
+
+#### Removed
+* `ParserCondition.canRecycleAll()` static methods
+* `TextParserConditionals` and `TextParserConditionalsDefault` `nextIf(CharCategory, ...)` methods removed so that `jrange` dependency could be removed
+* `ReadIsMatching.isNext(TextParser, CharCategory, int)` for same reason so that `jrange` dependency could be removed
+* As a replacement for `CharCategory` parameters call methods which accept `CharPredicate` and pass `CharSearcher::contains` (i.e. `CharCategory.getCharCondition()::contains`)
+
+
+--------
+### [0.17.0](https://github.com/TeamworkGuy2/JTextParser/commit/983af3ad09232a2f180fc55c0fd63a2c2a382653) - 2020-11-21
 #### Added
 * `char[] getFirstChars()` to CharParserMatchable interface, implementations can return null, consumers can fall back on `getFirstCharMatcher()`. This is meant for certain performance optimizations.
 
