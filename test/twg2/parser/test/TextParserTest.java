@@ -354,14 +354,15 @@ public class TextParserTest {
 
 		StringBuilder sb = new StringBuilder();
 		buf.nextChar();
-		Assert.assertEquals(9, buf.readCount(9, sb)); // TODO TextIteratorParse can't read past new lines
+		Assert.assertEquals(9, buf.readCount(9, sb)); // TODO TextIteratorParse can't read past new lines, so don't try to test that scenario yet
 		Assert.assertEquals("oolean a\n", sb.toString());
 		buf.nextChar();
-		Assert.assertEquals(5, buf.readCount(5, sb));
-		Assert.assertEquals("oolean a\nnt b\n", sb.toString());
+		Assert.assertEquals(3, buf.readCount(3, null));
+		Assert.assertEquals(2, buf.readCount(2, sb));
+		Assert.assertEquals("oolean a\nb\n", sb.toString());
 		buf.nextChar();
 		Assert.assertEquals(0, buf.readCount(99, sb));
-		Assert.assertEquals("oolean a\nnt b\n", sb.toString());
+		Assert.assertEquals("oolean a\nb\n", sb.toString());
 	}
 
 

@@ -7,8 +7,6 @@ import java.util.List;
 import twg2.arrays.ArrayUtil;
 import twg2.functions.predicates.CharPredicate;
 import twg2.parser.textParser.TextParser;
-import twg2.text.stringSearch.StringCompare;
-import twg2.text.stringSearch.StringIndex;
 
 /**
  * @author TeamworkGuy2
@@ -43,7 +41,7 @@ public class ReadMatching {
 			char ch = line.charAt(charI);
 			// preemptively append the first character, this must be undone if a character match cannot be found
 			dst.append(ch);
-			int index = StringIndex.startsWithIndex(strs, dst, charI - offset);
+			int index = startsWithIndex(strs, dst, charI - offset);
 
 			// if the start of a matching string is found, read until the entire string is read
 			// or until a mismatching character is found
@@ -52,7 +50,7 @@ public class ReadMatching {
 				int initialLength = dst.length();
 				int cI = charI + 1;
 				int strI = index;
-				while((strI = StringIndex.startsWithIndex(strs, dst, charI - offset)) != -1 &&
+				while((strI = startsWithIndex(strs, dst, charI - offset)) != -1 &&
 						cI < len && strs.get(strI).length() != cI - charI) {
 					dst.append(line.charAt(cI));
 					cI++;
@@ -119,27 +117,6 @@ public class ReadMatching {
 	}
 
 
-	/** Binary search a list of strings for a specified string builder matching one of the strings.
-	 * @return the closest match index or a negative index - 1 of the position where the closest match would be if there were any
-	 */
-	public static final int binaryStartsWith(SearchRange range, List<String> strs, StringBuilder key, int keyOffset) {
-		while(range.low <= range.high) {
-			int mid = range.getMid();
-			int cmp = StringCompare.compareStartsWith(strs.get(mid), key, keyOffset);
-			if(cmp < 0) {
-				range.low = mid + 1;
-			}
-			else if(cmp > 0) {
-				range.high = mid - 1;
-			}
-			else {
-				return mid;
-			}
-		}
-		return -(range.low + 1);
-	}
-
-
 	/** Read a sequence of escaped characters.<br>
 	 * For example, a call:<br>
 	 * {@code unescape("a \\\"block\\\" char '\\\"'", 0, '\\', '"', new StringBuilder())}<br>
@@ -178,6 +155,61 @@ public class ReadMatching {
 			throw new UncheckedIOException(e);
 		}
 		return i;
+	}
+
+
+	// NOTE: copied from JTextUtil@0.13.4 project (2021-06-26): StringIndex.java and StringCompare.java
+
+	/** Returns the list index of the string that starts with {@code startStr}
+	 * @param strs the list of strings, the start of each is compared to {@code startStr}
+	 * @param startStr the character sequence to compare to the start of each string in {@code strs}
+	 * @param startStrOffset the offset into the start string's contents at which to start
+	 * comparing characters to strings from {@code strs}
+	 * @return the {@code str} index of the string that starts with the contents of {@code startStr},
+	 * -1 if none of the strings start with {@code startStr}
+	 */
+	public static int startsWithIndex(List<String> strs, CharSequence startStr, int startStrOffset) {
+		for(int i = 0, len = strs.size(); i < len; i++) {
+			if(compareStartsWith(strs.get(i), startStr, startStrOffset) == 0) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
+	/** Compare a string to the {@link CharSequence}. Returns 0 if {@code str} starts
+	 * with the contents of {@code startStr}.
+	 * <pre>
+	 * str="b" > startStr="ab"
+	 * str="ab" < startStr="b"
+	 * str="ab" < startStr="abc"
+	 * str="abc" == startStr="ab"
+	 * str="abc" == startStr="abc"
+	 * </pre>
+	 * @param str the string to compare to
+	 * @param startStr the char sequence to compare to the beginning of {@code str}
+	 * @param startStrOffset the offset into the CharSequence at which to start comparing characters to {@code str}
+	 * @return 0 if {@code str} starts with {@code startStr}, greater than 0 if {@code str}
+	 * is greater than {@code startStr}, less than 0 if {@code str} is less than {@code startStr}
+	 */
+	public static int compareStartsWith(String str, CharSequence startStr, int startStrOffset) {
+		int strLen = str.length();
+		int ssRemLen = startStr.length() - startStrOffset;
+		int len = strLen > ssRemLen ? ssRemLen : strLen;
+		int k = 0;
+		for( ; k < len; k++) {
+			char c1 = str.charAt(k);
+			char c2 = startStr.charAt(startStrOffset + k);
+			if(c1 != c2) {
+				return c1 - c2;
+			}
+		}
+		// startStr empty or 0 characters matched and str is not empty, then str is greater
+		if((ssRemLen == 0 || k == 0) && strLen != 0) {
+			return 1;
+		}
+		return (k == len && strLen >= ssRemLen ? 0 : strLen - ssRemLen);
 	}
 
 }

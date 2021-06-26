@@ -1,13 +1,19 @@
 package twg2.parser.textParserUtils;
 
 import twg2.parser.textParser.TextParser;
-import twg2.text.stringUtils.StringCheck;
 
 /** Static methods for reading whitespace characters from a string or {@link TextParser}
  * @author TeamworkGuy2
  * @since 2014-8-23
  */
 public final class ReadWhitespace {
+	// NOTE: copied from JTextUtil@0.13.4 StringCheck.java (2021-06-26)
+	public static final char[] SIMPLE_WHITESPACE = new char[] {
+		' ' /* space: 32 */,
+		'	' /* tab: 9 */,
+		12 /* vertical tab: 12 */,
+		'\n' /* line terminators */
+	};
 
 	private ReadWhitespace() { throw new AssertionError("cannot instantiate static class ReadWhitespace"); }
 
@@ -17,7 +23,7 @@ public final class ReadWhitespace {
 	 * @return the number of whitespace characters read
 	 */
 	public static int readWhitespace(TextParser in) {
-		return readWhitespaceCustom(in, StringCheck.SIMPLE_WHITESPACE, 0);
+		return readWhitespaceCustom(in, SIMPLE_WHITESPACE, 0);
 	}
 
 
@@ -25,7 +31,7 @@ public final class ReadWhitespace {
 	 * @see #readWhitespace(char[], int, int)
 	 */
 	public static int readWhitespace(char[] str, int strOff) {
-		return readWhitespaceCustom(str, strOff, str.length - strOff, StringCheck.SIMPLE_WHITESPACE);
+		return readWhitespaceCustom(str, strOff, str.length - strOff, SIMPLE_WHITESPACE);
 	}
 
 
@@ -36,7 +42,7 @@ public final class ReadWhitespace {
 	 * @return the number of whitespace characters read
 	 */
 	public static int readWhitespace(char[] str, int strOff, int strLen) {
-		return readWhitespaceCustom(str, strOff, strLen, StringCheck.SIMPLE_WHITESPACE);
+		return readWhitespaceCustom(str, strOff, strLen, SIMPLE_WHITESPACE);
 	}
 
 

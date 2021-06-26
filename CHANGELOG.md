@@ -4,8 +4,18 @@ This project does its best to adhere to [Semantic Versioning](http://semver.org/
 
 
 --------
-### [0.18.0](N/A) - 2020-11-26
-#### `ParserFactory.returnParser(T)` interface default no-op method added, implementations are not required but it is available to override for performance optimizations
+### [0.19.0](N/A) - 2021-06-26
+#### Changed
+* Removed `jtext-util` dependency
+
+#### Removed
+* `ReadMatching.binaryStartsWith()` and corresponding `SearchRange` class since the method was unused and didn't really fit with a text parsing library
+
+
+--------
+### [0.18.0](https://github.com/TeamworkGuy2/JTextParser/commit/20ef59ec228f053442575a690351266bcf34000a) - 2020-11-26
+#### Added
+* `ParserFactory.returnParser(T)` interface default no-op method added, implementations are not required but it is available to override for performance optimizations
 
 #### Changed
 * `ParserCondition` `recycle()` default implementation removed, so implementors don't forget

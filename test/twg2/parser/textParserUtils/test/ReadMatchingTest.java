@@ -11,7 +11,6 @@ import twg2.junitassist.checks.CheckTask;
 import twg2.parser.textParser.TextIteratorParser;
 import twg2.parser.textParserUtils.ReadMatching;
 import twg2.parser.textParserUtils.ReadUnescape;
-import twg2.parser.textParserUtils.SearchRange;
 
 /**
  * @author TeamworkGuy2
@@ -102,31 +101,6 @@ public class ReadMatchingTest {
 			}
 			return parsedElems;
 		});
-	}
-
-
-	@Test
-	public void binaryStartsWithTest() {
-		List<String> strs = Arrays.asList(
-				"Barney",
-				"Billy",
-				"Cali",
-				"Straight",
-				"Top Hat"
-		);
-		SearchRange range = new SearchRange();
-
-		range.reset(5);
-		StringBuilder searchSb = new StringBuilder("Bill");
-		Assert.assertEquals(1, ReadMatching.binaryStartsWith(range, strs, searchSb, 0));
-
-		range.reset(5);
-		searchSb = new StringBuilder("D");
-		Assert.assertEquals(-4, ReadMatching.binaryStartsWith(range, strs, searchSb, 0));
-
-		range.reset(5);
-		searchSb = new StringBuilder("Xyz");
-		Assert.assertEquals(-6, ReadMatching.binaryStartsWith(range, strs, searchSb, 0));
 	}
 
 

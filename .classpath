@@ -13,6 +13,5 @@
 	<classpathentry kind="lib" path="C:/Users/TeamworkGuy2/Documents/Java/Libraries/jfunc/bin/jfunc.jar" sourcepath="/JFunc"/>
 	<classpathentry kind="lib" path="C:/Users/TeamworkGuy2/Documents/Java/Libraries/jprimitive-collections/bin/jprimitive_collections.jar" sourcepath="/JPrimitiveCollections"/>
 	<classpathentry kind="lib" path="C:/Users/TeamworkGuy2/Documents/Java/Libraries/jstreamish/bin/jstreamish.jar" sourcepath="/JStreamish"/>
-	<classpathentry kind="lib" path="C:/Users/TeamworkGuy2/Documents/Java/Libraries/jtext-util/bin/jtext_util.jar" sourcepath="/JTextUtil"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
